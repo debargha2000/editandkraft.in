@@ -1,0 +1,135 @@
+.about-page {
+  padding-top: var(--space-3xl);
+}
+
+/* Hero */
+.about-hero__title {
+  font-family: var(--font-display);
+  font-size: var(--text-6xl);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  color: var(--color-text);
+}
+
+.about-hero__intro {
+  font-size: var(--text-xl);
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  max-width: 700px;
+  margin-top: var(--space-md);
+}
+
+/* Story */
+.about-story__label,
+.about-timeline__label {
+  display: block;
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--color-text-tertiary);
+  margin-bottom: var(--space-lg);
+}
+
+.about-story__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  max-width: 750px;
+}
+
+.about-story__paragraph {
+  font-size: var(--text-lg);
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--color-text-secondary);
+}
+
+.about-story__paragraph:first-child {
+  font-size: var(--text-xl);
+  color: var(--color-text);
+}
+
+/* Philosophy */
+.about-philosophy__divider {
+  height: 1px;
+  background: var(--color-border);
+  margin-bottom: var(--space-xl);
+}
+
+.about-philosophy__inner {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: var(--space-xl);
+  align-items: start;
+}
+
+.about-philosophy__title {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+
+.about-philosophy__text {
+  font-size: var(--text-xl);
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+/* Timeline */
+.about-timeline__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.about-timeline__item {
+  display: grid;
+  grid-template-columns: 80px 20px 1fr;
+  gap: var(--space-sm);
+  align-items: center;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.about-timeline__year {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.about-timeline__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-text);
+}
+
+.about-timeline__event {
+  font-size: var(--text-base);
+  font-weight: 300;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .about-hero__title {
+    font-size: var(--text-4xl);
+  }
+
+  .about-philosophy__inner {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .about-timeline__item {
+    grid-template-columns: 60px 12px 1fr;
+  }
+}

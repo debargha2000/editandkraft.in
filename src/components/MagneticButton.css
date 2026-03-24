@@ -1,0 +1,5 @@
+.magnetic-button {
+  display: inline-block;
+  transition: transform 0.4s var(--ease-out-expo);
+  will-change: transform;
+}

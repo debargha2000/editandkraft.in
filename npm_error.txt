@@ -1,0 +1,31 @@
+npm error code ERESOLVE
+npm error ERESOLVE could not resolve
+npm error
+npm error While resolving: vite-plugin-pwa@1.2.0
+npm error Found: vite@8.0.2
+npm error node_modules/vite
+npm error   dev vite@"^8.0.2" from the root project
+npm error   peer vite@"^8.0.0" from @vitejs/plugin-react@6.0.1
+npm error   node_modules/@vitejs/plugin-react
+npm error     dev @vitejs/plugin-react@"^6.0.1" from the root project
+npm error   2 more (vite-plugin-image-optimizer, vite-plugin-svgr)
+npm error
+npm error Could not resolve dependency:
+npm error peer vite@"^3.1.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0" from vite-plugin-pwa@1.2.0
+npm error node_modules/vite-plugin-pwa
+npm error   dev vite-plugin-pwa@"^1.2.0" from the root project
+npm error
+npm error Conflicting peer dependency: vite@7.3.1
+npm error node_modules/vite
+npm error   peer vite@"^3.1.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0" from vite-plugin-pwa@1.2.0
+npm error   node_modules/vite-plugin-pwa
+npm error     dev vite-plugin-pwa@"^1.2.0" from the root project
+npm error
+npm error Fix the upstream dependency conflict, or retry
+npm error this command with --force or --legacy-peer-deps
+npm error to accept an incorrect (and potentially broken) dependency resolution.
+npm error
+npm error
+npm error For a full report see:
+npm error C:\Users\debar\AppData\Local\npm-cache\_logs\2026-03-24T09_30_57_012Z-eresolve-report.txt
+npm error A complete log of this run can be found in: C:\Users\debar\AppData\Local\npm-cache\_logs\2026-03-24T09_30_57_012Z-debug-0.log
