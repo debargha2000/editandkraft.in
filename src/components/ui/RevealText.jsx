@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { EASE_EXPO } from '../utils/animations';
+import { EASE_EXPO } from '../../utils/animations';
 
 // Split text into lines and reveal each
 export function RevealLines({ text, className = '', delay = 0, stagger = 0.08 }) {

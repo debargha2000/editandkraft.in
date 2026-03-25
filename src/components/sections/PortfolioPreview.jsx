@@ -3,8 +3,8 @@ import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { PORTFOLIO } from '../../data/content';
 import { fadeUp } from '../../utils/animations';
-import SectionHeader from '../SectionHeader';
-import MagneticButton from '../MagneticButton';
+import SectionHeader from '../ui/SectionHeader';
+import MagneticButton from '../ui/MagneticButton';
 import './PortfolioPreview.css';
 
 export default function PortfolioPreview() {

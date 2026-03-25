@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { pageTransition, fadeUp, scaleUp } from '../utils/animations';
 import { PORTFOLIO } from '../data/content';
-import SectionHeader from '../components/SectionHeader';
+import SectionHeader from '../components/ui/SectionHeader';
 import './Work.css';
 
 export default function Work() {

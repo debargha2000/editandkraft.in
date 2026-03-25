@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { pageTransition, fadeUp, fadeIn, lineGrow, slideFromLeft, EASE_EXPO } from '../utils/animations';
 import { ABOUT } from '../data/content';
-import { RevealLines } from '../components/RevealText';
+import { RevealLines } from '../components/ui/RevealText';
 import './About.css';
 
 export default function About() {

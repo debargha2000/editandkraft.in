@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { SERVICES } from '../../data/content';
-import SectionHeader from '../SectionHeader';
+import SectionHeader from '../ui/SectionHeader';
 import ServicesMarquee from './ServicesMarquee';
 import './ServicesShowcase.css';
 

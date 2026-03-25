@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import MagneticButton from './MagneticButton.jsx';
-import { scaleUp } from '../utils/animations';
+import { scaleUp } from '../../utils/animations';
 
 export default function PlanCard({ plan, index, isInView }) {
   const [selectedOption, setSelectedOption] = useState(plan.purchaseOptions ? plan.purchaseOptions[0] : null);

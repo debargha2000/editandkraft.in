@@ -3,8 +3,8 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { HERO } from '../../data/content';
 import { fadeUp, fadeIn } from '../../utils/animations';
-import { RevealLines } from '../RevealText';
-import MagneticButton from '../MagneticButton';
+import { RevealLines } from '../ui/RevealText';
+import MagneticButton from '../ui/MagneticButton';
 import './Hero.css';
 
 export default function Hero() {

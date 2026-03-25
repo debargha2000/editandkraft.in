@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { expoTransition } from '../utils/animations';
+import { expoTransition } from '../../utils/animations';
 import './SectionHeader.css';
 
 export default function SectionHeader({ title, subtitle, align = 'left', level = 'h2' }) {

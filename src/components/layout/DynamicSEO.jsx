@@ -8,7 +8,7 @@
 
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
-import { getSEOForRoute } from "../data/seo";
+import { getSEOForRoute } from "../../data/seo";
 
 /**
  * DynamicSEO — Drop into any page/layout to get route-aware SEO.

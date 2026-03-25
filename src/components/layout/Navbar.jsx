@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SITE, NAV_LINKS } from '../data/content';
-import { EASE_EXPO, EASE_IN_OUT } from '../utils/animations';
+import { SITE, NAV_LINKS } from '../../data/content';
+import { EASE_EXPO, EASE_IN_OUT } from '../../utils/animations';
 import './Navbar.css';
 
 export default function Navbar() {

@@ -8,7 +8,7 @@
 
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
-import { getAllSchemasForRoute } from "../data/seo";
+import { getAllSchemasForRoute } from "../../data/seo";
 
 /**
  * StructuredData — Injects JSON-LD structured data per route.

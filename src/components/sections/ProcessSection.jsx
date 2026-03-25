@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { PROCESS } from '../../data/content';
 import { slideFromLeft } from '../../utils/animations';
-import SectionHeader from '../SectionHeader';
+import SectionHeader from '../ui/SectionHeader';
 import './ProcessSection.css';
 
 export default function ProcessSection() {

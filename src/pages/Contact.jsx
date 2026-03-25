@@ -2,8 +2,8 @@ import { useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { pageTransition, fadeUp, EASE_EXPO } from '../utils/animations';
 import { SITE, CONTACT } from '../data/content';
-import { RevealLines } from '../components/RevealText';
-import MagneticButton from '../components/MagneticButton';
+import { RevealLines } from '../components/ui/RevealText';
+import MagneticButton from '../components/ui/MagneticButton';
 import './Contact.css';
 
 export default function Contact() {

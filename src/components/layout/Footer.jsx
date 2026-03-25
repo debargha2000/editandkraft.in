@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { SITE, FOOTER } from '../data/content';
-import { fadeUp, lineGrow } from '../utils/animations';
-import MagneticButton from './MagneticButton';
+import { SITE, FOOTER } from '../../data/content';
+import { fadeUp, lineGrow } from '../../utils/animations';
+import MagneticButton from '../ui/MagneticButton';
 import './Footer.css';
 
 export default function Footer() {

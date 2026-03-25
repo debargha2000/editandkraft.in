@@ -2,8 +2,8 @@ import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { pageTransition } from '../utils/animations';
 import { PLANS } from '../data/content';
-import SectionHeader from '../components/SectionHeader';
-import PlanCard from "../components/PlanCard.jsx";
+import SectionHeader from '../components/ui/SectionHeader';
+import PlanCard from "../components/ui/PlanCard.jsx";
 import './Services.css';
 
 export default function Services() {
