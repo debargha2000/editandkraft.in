@@ -36,8 +36,10 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
+            if (id.includes('firebase')) return 'firebase';
             if (id.includes('framer-motion')) return 'framer-motion';
-            if (id.includes('react-router')) return 'react-router';
+            if (id.includes('react-router') || id.includes('@remix-run')) return 'react-router';
+            if (id.includes('react')) return 'react-core';
             return 'vendor';
           }
         }
