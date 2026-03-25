@@ -29,7 +29,6 @@ export default defineConfig({
   ],
   base: '/editandkraft.in/',
   build: {
-    base: '/editandkraft.in/',
     target: 'es2020',
     assetsInlineLimit: 4096,
     cssMinify: 'lightningcss',
