@@ -1,12 +1,41 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase';
+import { projectService } from '../../services/projectService';
 import { pageTransition, fadeUp } from '../../utils/animations';
 import MagneticButton from '../../components/ui/MagneticButton';
+import ProjectForm from '../../components/admin/ProjectForm';
+import './Dashboard.css';
+
+const CATEGORIES = ['All', 'Social Media', 'Motion Graphics', 'YouTube', 'Short-Form'];
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activeCategory, setActiveCategory] = useState('All');
+  
+  // Editor State
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingProject, setEditingProject] = useState(null);
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const fetchProjects = async () => {
+    setLoading(true);
+    try {
+      const data = await projectService.getProjects();
+      setProjects(data);
+    } catch (error) {
+      console.error("Failed to load projects", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -17,81 +46,156 @@ export default function Dashboard() {
     }
   };
 
+  const handleAddNew = () => {
+    setEditingProject(null);
+    setIsFormOpen(true);
+  };
+
+  const handleEdit = (project) => {
+    setEditingProject(project);
+    setIsFormOpen(true);
+  };
+
+  const handleDelete = async (id, imageUrl) => {
+    if (window.confirm('Are you sure you want to delete this project? This cannot be undone.')) {
+      try {
+        await projectService.deleteProject(id, imageUrl);
+        fetchProjects(); // Refresh list
+      } catch (error) {
+        console.error("Failed to delete", error);
+        alert('Failed to delete project. Check console for details.');
+      }
+    }
+  };
+
+  const handleFormSubmit = async (formData, imageFile) => {
+    try {
+      if (editingProject) {
+        await projectService.updateProject(editingProject.id, formData, imageFile, editingProject.imageUrl);
+      } else {
+        await projectService.addProject(formData, imageFile);
+      }
+      setIsFormOpen(false);
+      fetchProjects(); // Refresh list
+    } catch (error) {
+      console.error("Submission failed", error);
+      alert('Failed to save project. Ensure your image is not too large.');
+    }
+  };
+
+  const filteredProjects = activeCategory === 'All' 
+    ? projects 
+    : projects.filter(p => p.category === activeCategory);
+
   const headerAnim = fadeUp(0.1, 0.8, 30);
-  const contentAnim = fadeUp(0.2, 0.8, 30);
 
   return (
-    <motion.main className="admin-dashboard-page" {...pageTransition} style={{ padding: '120px 20px', minHeight: '100vh', background: 'var(--color-bg)' }}>
-      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+    <motion.main className="admin-dashboard-page" {...pageTransition}>
+      <div className="container">
         
         <motion.div 
           className="dashboard-header"
           initial={headerAnim.initial}
           animate={headerAnim.animate}
           transition={headerAnim.transition}
-          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '2rem' }}
         >
-          <div>
-            <h1 style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>Admin Dashboard</h1>
-            <p style={{ color: 'var(--color-text-muted)' }}>Welcome back. Manage your portfolio and site settings here.</p>
+          <div className="dashboard-header__content">
+            <h1>CMS Dashboard</h1>
+            <p>Manage your portfolio projects, categories, and home page showcases.</p>
           </div>
           
-          <MagneticButton>
-            <button 
-              onClick={handleLogout}
-              style={{
-                padding: '10px 20px',
-                background: 'transparent',
-                border: '1px solid rgba(255,255,255,0.2)',
-                color: 'white',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseOver={(e) => {
-                e.target.style.background = 'white';
-                e.target.style.color = 'black';
-              }}
-              onMouseOut={(e) => {
-                e.target.style.background = 'transparent';
-                e.target.style.color = 'white';
-              }}
-            >
-              Sign Out
-            </button>
-          </MagneticButton>
+          <div className="dashboard-header__actions">
+            <MagneticButton>
+              <button className="btn-add" onClick={handleAddNew}>
+                + Add Project
+              </button>
+            </MagneticButton>
+
+            <MagneticButton>
+              <button className="btn-logout" onClick={handleLogout}>
+                Sign Out
+              </button>
+            </MagneticButton>
+          </div>
         </motion.div>
 
-        <motion.div 
-          className="dashboard-content"
-          initial={contentAnim.initial}
-          animate={contentAnim.animate}
-          transition={contentAnim.transition}
-          style={{ 
-            padding: '3rem', 
-            background: 'rgba(255,255,255,0.03)', 
-            borderRadius: '16px', 
-            border: '1px dashed rgba(255,255,255,0.1)',
-            textAlign: 'center',
-            minHeight: '400px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}
-        >
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" style={{ marginBottom: '1.5rem' }}>
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-            <line x1="12" y1="22.08" x2="12" y2="12"/>
-          </svg>
-          <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'rgba(255,255,255,0.6)' }}>Placeholder: CMS Editor Coming Soon</h2>
-          <p style={{ color: 'var(--color-text-muted)', maxWidth: '400px' }}>
-            This is where you will add, edit, and delete your portfolio projects. The database connection is active.
-          </p>
-        </motion.div>
+        <div className="dashboard-tabs">
+          {CATEGORIES.map(cat => (
+            <button
+              key={cat}
+              className={`dashboard-tab ${activeCategory === cat ? 'active' : ''}`}
+              onClick={() => setActiveCategory(cat)}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        <div className="dashboard-content">
+          {loading ? (
+            <div className="dashboard-loading">Loading your portfolio...</div>
+          ) : filteredProjects.length === 0 ? (
+            <div className="dashboard-empty">
+              <p>No projects found in this category.</p>
+              <button onClick={handleAddNew} className="btn-outline mt-4">Add your first project</button>
+            </div>
+          ) : (
+            <div className="project-grid">
+              <AnimatePresence>
+                {filteredProjects.map((project) => (
+                  <motion.div 
+                    key={project.id}
+                    className="admin-project-card glass"
+                    layout
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <div className="card-image" style={{ backgroundColor: project.color }}>
+                      {project.imageUrl && <img src={project.imageUrl} alt={project.title} />}
+                      <div className="card-actions">
+                        <button onClick={() => handleEdit(project)} className="btn-icon edit">Edit</button>
+                        <button onClick={() => handleDelete(project.id, project.imageUrl)} className="btn-icon delete">Delete</button>
+                      </div>
+                      
+                      {project.isFavorite && (
+                        <div className="favorite-badge">
+                          ★ Slot {project.showcaseSlot}
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="card-info">
+                      <div className="card-meta">
+                        <span className="card-category">{project.category}</span>
+                        <span className="card-year">{project.year}</span>
+                      </div>
+                      <h3>{project.title}</h3>
+                      {project.projectUrl && (
+                        <a href={project.projectUrl} target="_blank" rel="noreferrer" className="card-link">
+                          View Link ↗
+                        </a>
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          )}
+        </div>
 
       </div>
+
+      <AnimatePresence>
+        {isFormOpen && (
+          <ProjectForm 
+            initialData={editingProject} 
+            onSubmit={handleFormSubmit} 
+            onClose={() => setIsFormOpen(false)} 
+          />
+        )}
+      </AnimatePresence>
     </motion.main>
   );
 }

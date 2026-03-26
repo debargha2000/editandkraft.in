@@ -45,7 +45,7 @@
 
 .process__step:hover .process__step-number {
   background: var(--color-text);
-  color: var(--color-white);
+  color: #000000; /* Change text color to black for readability */
   border-color: var(--color-text);
 }
 

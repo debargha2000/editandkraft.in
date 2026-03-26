@@ -7,6 +7,8 @@ import { pageTransition, fadeUp } from '../../utils/animations';
 import MagneticButton from '../../components/ui/MagneticButton';
 import './Login.css';
 
+const ALLOWED_EMAILS = ["debarghapakhira@gmail.com", "deys87714@gmail.com"];
+
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,14 +16,25 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const checkAndRedirect = async (user) => {
+    if (!ALLOWED_EMAILS.includes(user.email)) {
+      await auth.signOut();
+      navigate('/'); // Redirect to home page
+      return false;
+    }
+    return true;
+  };
+
   const handleEmailLogin = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
     
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate('/admin/dashboard');
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      if (await checkAndRedirect(userCredential.user)) {
+        navigate('/admin/dashboard');
+      }
     } catch {
       setError('Invalid email or password. Please try again.');
       setLoading(false);
@@ -34,8 +47,10 @@ export default function Login() {
     const provider = new GoogleAuthProvider();
     
     try {
-      await signInWithPopup(auth, provider);
-      navigate('/admin/dashboard');
+      const userCredential = await signInWithPopup(auth, provider);
+      if (await checkAndRedirect(userCredential.user)) {
+        navigate('/admin/dashboard');
+      }
     } catch (err) {
       if (err.code !== 'auth/popup-closed-by-user') {
         setError('Google sign-in failed. Please try again.');
