@@ -21,6 +21,8 @@ export default function Dashboard() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
 
+  const [selectedProjects, setSelectedProjects] = useState([]);
+
   useEffect(() => {
     fetchProjects();
   }, []);
@@ -68,6 +70,35 @@ export default function Dashboard() {
     }
   };
 
+  const toggleProjectSelection = (projectId) => {
+    setSelectedProjects(prevSelected =>
+      prevSelected.includes(projectId)
+        ? prevSelected.filter(id => id !== projectId)
+        : [...prevSelected, projectId]
+    );
+  };
+
+  const handleGroupDelete = async () => {
+    if (window.confirm(`Are you sure you want to delete ${selectedProjects.length} selected projects? This cannot be undone.`)) {
+      setLoading(true);
+      try {
+        for (const projectId of selectedProjects) {
+          const projectToDelete = projects.find(p => p.id === projectId);
+          if (projectToDelete) {
+            await projectService.deleteProject(projectId, projectToDelete.imageUrl);
+          }
+        }
+        setSelectedProjects([]);
+        fetchProjects();
+      } catch (error) {
+        console.error("Failed to delete selected projects", error);
+        alert('Failed to delete selected projects. Check console for details.');
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
   const handleFormSubmit = async (formData, imageFile) => {
     try {
       if (editingProject) {
@@ -105,6 +136,13 @@ export default function Dashboard() {
           </div>
           
           <div className="dashboard-header__actions">
+            {selectedProjects.length > 0 && (
+              <MagneticButton>
+                <button className="btn-delete-selected" onClick={handleGroupDelete} disabled={loading}>
+                  Delete Selected ({selectedProjects.length})
+                </button>
+              </MagneticButton>
+            )}
             <MagneticButton>
               <button className="btn-add" onClick={handleAddNew}>
                 + Add Project
@@ -154,6 +192,12 @@ export default function Dashboard() {
                   >
                     <div className="card-image" style={{ backgroundColor: project.color }}>
                       {project.imageUrl && <img src={project.imageUrl} alt={project.title} />}
+                      <input 
+                        type="checkbox" 
+                        className="project-select-checkbox"
+                        checked={selectedProjects.includes(project.id)}
+                        onChange={() => toggleProjectSelection(project.id)}
+                      />
                       <div className="card-actions">
                         <button onClick={() => handleEdit(project)} className="btn-icon edit">Edit</button>
                         <button onClick={() => handleDelete(project.id, project.imageUrl)} className="btn-icon delete">Delete</button>

@@ -201,6 +201,40 @@
   color: var(--color-text);
 }
 
+/* Group Delete Button */
+.btn-delete-selected {
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  background: #dc3545; /* Red color for delete */
+  color: var(--color-white);
+  border: none;
+}
+
+.btn-delete-selected:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn-delete-selected:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Project Select Checkbox */
+.project-select-checkbox {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  z-index: 10;
+}
+
 @media (max-width: 768px) {
   .dashboard-header {
     flex-direction: column;
