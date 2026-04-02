@@ -135,4 +135,16 @@
   .work-grid {
     grid-template-columns: 1fr;
   }
+
+  .work-filters {
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .work-filter {
+    padding: 0.8rem 1.2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 100px;
+    margin-bottom: 0.5rem;
+  }
 }

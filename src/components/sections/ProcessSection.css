@@ -78,6 +78,8 @@
   .process__step {
     grid-template-columns: 50px 1fr;
     gap: var(--space-sm);
+    padding: 1.5rem;
+    border-radius: 2rem;
   }
 
   .process__step-number {

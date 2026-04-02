@@ -59,7 +59,7 @@ export default function Navbar() {
           </div>
 
           <button
-            className={`navbar__burger ${menuOpen ? 'navbar__burger--open' : ''}`}
+            className={`navbar__burger btn-magic ${menuOpen ? 'navbar__burger--open' : ''}`}
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"
             aria-expanded={menuOpen}
