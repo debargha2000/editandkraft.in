@@ -1,9 +1,10 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 
 import RootLayout from './components/layout/RootLayout';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import Preloader from './components/ui/Preloader';
 
 const Home = lazy(() => import('./pages/Home'));
 const Work = lazy(() => import('./pages/Work'));
@@ -36,11 +37,28 @@ function AnimatedRoutes() {
 }
 
 export default function App() {
+  const [isSiteLoaded, setIsSiteLoaded] = useState(false);
+
+  // Lock scroll while loading
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    if (!isSiteLoaded) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [isSiteLoaded]);
+
   return (
-    <Router>
-      <RootLayout>
-        <AnimatedRoutes />
-      </RootLayout>
-    </Router>
+    <>
+      <Preloader onComplete={() => setIsSiteLoaded(true)} />
+      
+      {/* We keep the router mounted, but we can delay pointer events or just let the preloader overlap it */}
+      <Router>
+        <RootLayout>
+          <AnimatedRoutes />
+        </RootLayout>
+      </Router>
+    </>
   );
 }

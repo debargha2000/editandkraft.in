@@ -19,6 +19,7 @@ export const SITE = {
 };
 
 export const NAV_LINKS = [
+  { label: "Home", path: "/" },
   { label: "Work", path: "/work" },
   { label: "Services", path: "/services" },
   { label: "About", path: "/about" },

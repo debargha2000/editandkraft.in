@@ -14,6 +14,7 @@
   gap: var(--space-md);
   animation: services-marquee 35s linear infinite;
   width: max-content;
+  align-items: stretch; /* Ensures all cards in the row have same height */
 }
 
 @keyframes services-marquee {
@@ -29,7 +30,7 @@
   position: relative;
   flex-shrink: 0;
   width: clamp(280px, 22vw, 360px);
-  aspect-ratio: 1/1;
+  min-height: clamp(280px, 22vw, 360px); /* Base height to keep them uniform if text is short */
   border-radius: 1.25rem;
   overflow: hidden;
   background: var(--glass-bg, rgba(255, 255, 255, 0.03));
@@ -41,7 +42,7 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 2rem;
+  padding: 2.5rem 2rem;
 }
 
 .services-marquee__content {

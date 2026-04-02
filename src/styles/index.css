@@ -14,6 +14,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  cursor: none !important; /* Globally disable default cursor */
 }
 
 html {
@@ -31,7 +32,6 @@ body {
   color: var(--color-text);
   background-color: transparent;
   overflow-x: hidden;
-  cursor: none; /* Custom cursor replaces default */
 }
 
 a {
@@ -48,9 +48,9 @@ img, video {
   display: block;
 }
 
-button {
+button:not(.btn-magic) {
   font-family: inherit;
-  cursor: none;
+  cursor: pointer; /* Changed from none to pointer as per standard request, custom cursor should handle the visual */
   border: 1px solid var(--color-white);
   background: transparent;
   color: var(--color-white);
@@ -59,18 +59,21 @@ button {
   transition: all 0.4s var(--ease-out-expo);
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(0);
+  -webkit-backdrop-filter: blur(0);
 }
 
-button:hover {
+button:not(.btn-magic):hover {
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
-  color: #000000; /* Change text color to black for readability */
+  color: transparent;
+  text-shadow: none;
 }
 
-
-button:active {
-  background: #FFFFFF;
-  color: #000000; /* Change text color to black for readability */
+button:not(.btn-magic):active {
+  background: #000000;
+  color: transparent;
+  border-color: #000000;
 }
 
 input, textarea, select {
@@ -240,47 +243,6 @@ h1, h2, h3, h4, h5, h6, p, a, span, li, button, input, textarea {
 ::selection {
   background: var(--color-text);
   color: var(--color-white);
-}
-
-/* ---- Scrollbar ---- */
-::-webkit-scrollbar {
-  width: 4px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--color-bg);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 2px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-tertiary);
-}
-
-/* ---- Page Transition Overlay ---- */
-.page-transition-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--color-text);
-  z-index: var(--z-overlay);
-  pointer-events: none;
-}
-
-/* ---- Responsive Touch Devices ---- */
-@media (pointer: coarse) {
-  body {
-    cursor: auto;
-  }
-
-  button {
-    cursor: pointer;
-  }
 }
 
 /* Mobile adjustments */
