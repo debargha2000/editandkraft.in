@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { pageTransition, fadeUp, fadeIn, lineGrow, slideFromLeft, EASE_EXPO } from '../utils/animations';
-import { ABOUT } from '../data/content';
+import { useAnimations } from '../hooks/useAnimations';
+import { useSiteStore } from '../stores/siteStore';
 import { RevealLines } from '../components/ui/RevealText';
 import './About.css';
 
@@ -9,9 +9,12 @@ export default function About() {
   const storyRef = useRef(null);
   const philosRef = useRef(null);
   const timelineRef = useRef(null);
-  const storyInView = useInView(storyRef, { once: true, margin: '-100px' });
-  const philosInView = useInView(philosRef, { once: true, margin: '-100px' });
-  const timelineInView = useInView(timelineRef, { once: true, margin: '-100px' });
+  const storyInView = useInView(storyRef, { once: false, margin: '-100px' });
+  const philosInView = useInView(philosRef, { once: false, margin: '-100px' });
+  const timelineInView = useInView(timelineRef, { once: false, margin: '-100px' });
+  
+  const { fadeUp, fadeIn, lineGrow, pageTransition, slideFromLeft } = useAnimations();
+  const { about: ABOUT } = useSiteStore();
 
   const introAnim = fadeUp(0.5, 1, 40);
   const dividerAnim = lineGrow();

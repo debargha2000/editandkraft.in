@@ -13,7 +13,7 @@ const SHOWCASE_SLOTS = [
   { id: 6, label: 'Slot 6 (Bottom Center)' }
 ];
 
-export default function ProjectForm({ initialData = null, onSubmit, onClose }) {
+export default function ProjectForm({ initialData = null, onSubmit, onClose, hasPermission, permissions }) {
   const [formData, setFormData] = useState({
     title: '',
     client: '',
@@ -80,6 +80,17 @@ export default function ProjectForm({ initialData = null, onSubmit, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Check permissions before submitting
+    if (initialData && !hasPermission(permissions.UPDATE_PROJECT)) {
+      alert('You do not have permission to update projects.');
+      return;
+    }
+    if (!initialData && !hasPermission(permissions.CREATE_PROJECT)) {
+      alert('You do not have permission to create projects.');
+      return;
+    }
+    
     setIsSubmitting(true);
     try {
       await onSubmit(formData, imageFile);

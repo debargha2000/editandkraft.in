@@ -236,6 +236,26 @@ export function getBreadcrumbSchema(pathname = "/") {
 }
 
 /**
+ * Generate CreativeWork JSON-LD schemas — one per portfolio item from content.js.
+ * When portfolio items are added/removed in content.js, schema auto-adapts.
+ */
+export function getCreativeWorkSchemas() {
+  return PORTFOLIO.projects.map((project) => ({
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: project.title,
+    description: project.description,
+    creator: {
+      "@type": "Organization",
+      name: SITE.name,
+    },
+    dateCreated: project.year,
+    about: project.category,
+    client: project.client,
+  }));
+}
+
+/**
  * Get all structured data schemas for a given route.
  * Returns an array of JSON-LD objects ready for injection.
  */
@@ -249,6 +269,11 @@ export function getAllSchemasForRoute(pathname = "/") {
   // Add service schemas on home and services pages
   if (pathname === "/" || pathname === "/services") {
     schemas.push(...getServiceSchemas());
+  }
+
+  // Add creative work schemas on work page
+  if (pathname === "/work") {
+    schemas.push(...getCreativeWorkSchemas());
   }
 
   return schemas;

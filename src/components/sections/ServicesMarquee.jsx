@@ -17,7 +17,7 @@ const ServiceCard = ({ service }) => {
 
 export default function ServicesMarquee() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const isInView = useInView(ref, { once: false, margin: '-100px' });
 
   // Duplicate for seamless loop
   const duplicated = [...SERVICES.items, ...SERVICES.items];

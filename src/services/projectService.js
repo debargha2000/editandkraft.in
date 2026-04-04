@@ -11,6 +11,7 @@ import {
   serverTimestamp
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import { useSiteStore } from '../stores/siteStore';
 
 const COLLECTION_NAME = 'projects';
 
@@ -20,10 +21,15 @@ export const projectService = {
     try {
       const q = query(collection(db, COLLECTION_NAME), orderBy('timestamp', 'desc'));
       const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => ({
+      const projects = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
+      
+      // Update global store with fetched projects
+      useSiteStore.getState().updateSiteData({ portfolio: { ...useSiteStore.getState().portfolio, projects } });
+      
+      return projects;
     } catch (error) {
       console.error("Error fetching projects:", error);
       throw error;
@@ -43,6 +49,10 @@ export const projectService = {
         imageUrl,
         timestamp: serverTimestamp()
       });
+      
+      // Add project to global store
+      useSiteStore.getState().addProject({ id: docRef.id, ...projectData, imageUrl });
+      
       return docRef.id;
     } catch (error) {
       console.error("Error adding project:", error);
@@ -68,6 +78,9 @@ export const projectService = {
         imageUrl,
         timestamp: projectData.timestamp || serverTimestamp() // Preserve original timestamp if it exists
       });
+      
+      // Update project in global store
+      useSiteStore.getState().updateProject(id, { ...projectData, imageUrl });
     } catch (error) {
       console.error("Error updating project:", error);
       throw error;
@@ -81,6 +94,9 @@ export const projectService = {
         await this.deleteImage(imageUrl);
       }
       await deleteDoc(doc(db, COLLECTION_NAME, id));
+      
+      // Remove project from global store
+      useSiteStore.getState().removeProject(id);
     } catch (error) {
       console.error("Error deleting project:", error);
       throw error;

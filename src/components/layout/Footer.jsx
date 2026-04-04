@@ -8,7 +8,7 @@ import './Footer.css';
 
 export default function Footer() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const isInView = useInView(ref, { once: false, margin: '-100px' });
 
   const headingAnim = fadeUp(0, 1, 60);
   const btnAnim = fadeUp(0.2, 0.8, 30);

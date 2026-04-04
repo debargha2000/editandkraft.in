@@ -27,7 +27,7 @@ export default defineConfig({
       }
     }),
   ],
-  base: '/editandkraft.in/',
+  base: '/',
   build: {
     target: 'es2020',
     assetsInlineLimit: 4096,

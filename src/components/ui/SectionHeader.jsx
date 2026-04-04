@@ -5,7 +5,7 @@ import './SectionHeader.css';
 
 export default function SectionHeader({ title, subtitle, align = 'left', level = 'h2' }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const isInView = useInView(ref, { once: false, margin: '-100px' });
 
   // Use a dynamic motion component
   const MotionTag = motion[level] || motion.h2;

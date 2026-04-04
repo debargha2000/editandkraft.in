@@ -48,32 +48,64 @@ img, video {
   display: block;
 }
 
-button:not(.btn-magic) {
-  font-family: inherit;
-  cursor: pointer; /* Changed from none to pointer as per standard request, custom cursor should handle the visual */
-  border: 1px solid var(--color-white);
-  background: transparent;
-  color: var(--color-white);
-  padding: 0.75rem 1.5rem;
+/* ---- Button System (Monolithic & Unified) ---- */
+button:not(.btn-magic), 
+.button {
+  font-family: var(--font-accent);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 0.8rem 1.6rem;
   border-radius: 100px;
-  transition: all 0.4s var(--ease-out-expo);
+  cursor: pointer;
+  transition: all 0.5s var(--ease-out-expo);
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(0);
-  -webkit-backdrop-filter: blur(0);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  backdrop-filter: blur(0px);
+  will-change: transform, backdrop-filter;
 }
 
-button:not(.btn-magic):hover {
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  color: transparent;
-  text-shadow: none;
+.button--primary {
+  background: var(--color-white) !important;
+  color: #000 !important;
+  border-color: var(--color-white) !important;
+  font-weight: 600;
 }
 
-button:not(.btn-magic):active {
-  background: #000000;
-  color: transparent;
-  border-color: #000000;
+.button--secondary {
+  background: transparent !important;
+  border-color: var(--color-white) !important;
+  color: var(--color-white) !important;
+}
+
+.button--glass {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+button:not(.btn-magic):hover,
+.button:hover {
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+  transform: translateY(-2px);
+}
+
+.button--primary:hover {
+  background: #fff !important;
+  color: #000 !important;
+  opacity: 0.9;
+  transform: translateY(-3px);
 }
 
 input, textarea, select {
@@ -257,4 +289,10 @@ h1, h2, h3, h4, h5, h6, p, a, span, li, button, input, textarea {
     --text-6xl: clamp(2rem, 7vw, 2.8rem);
     --text-5xl: clamp(1.8rem, 6vw, 2.5rem);
   }
+}
+
+/* ---- Focus Styles ---- */
+*:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }

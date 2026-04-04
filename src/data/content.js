@@ -285,30 +285,35 @@ export const TESTIMONIALS = [
       "Edit & Kraft didn't just design our campaign — they reimagined our entire brand presence. The results speak for themselves.",
     author: "Anika Sharma",
     role: "CMO, Fashion Forward Inc.",
+    project: "Spring Collection Launch"
   },
   {
     quote:
       "The motion graphics package they delivered was beyond cinematic. Our product launch became the most talked-about event of the quarter.",
     author: "Rajiv Menon",
     role: "Founder, Velocity Tech",
+    project: "Velocity Product Launch"
   },
   {
     quote:
       "Working with Edit & Kraft is like having a secret weapon. Their understanding of what stops the scroll is unmatched.",
     author: "Priya Kapoor",
     role: "Head of Digital, Heritage Brands",
+    project: "Brand Identity Redesign"
   },
   {
     quote:
       "From concept to delivery, every frame was perfect. They turned our vision into a visual masterpiece.",
     author: "Arjun Desai",
     role: "Creative Director, Skyline Group",
+    project: "Corporate Video Series"
   },
   {
     quote:
       "Our YouTube channel went from 100K to 600K subscribers in 6 months. Edit & Kraft's strategy and execution is world-class.",
     author: "Vikram Singh",
     role: "Content Creator",
+    project: "Channel Growth Strategy"
   },
 ];
 

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
-import { pageTransition, fadeUp, scaleUp } from '../utils/animations';
+import { useAnimations } from '../hooks/useAnimations';
 import { projectService } from '../services/projectService';
 import SectionHeader from '../components/ui/SectionHeader';
 import './Work.css';
@@ -12,7 +12,10 @@ export default function Work() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-50px' });
+  const isInView = useInView(ref, { once: false, margin: '-50px' });
+  
+  const { pageTransition, fadeUp, scaleUp } = useAnimations();
+  // const { portfolio } = useSiteStore(); // Removed unused variable
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -107,6 +110,7 @@ export default function Work() {
                             src={project.imageUrl} 
                             alt={project.title} 
                             style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                            loading="lazy"
                           />
                         ) : (
                           <div className="work-card__image-inner">

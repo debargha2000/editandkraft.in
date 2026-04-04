@@ -4,15 +4,36 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { projectService } from '../../services/projectService';
-import { pageTransition, fadeUp } from '../../utils/animations';
+import { useAnimations } from '../../hooks/useAnimations';
 import MagneticButton from '../../components/ui/MagneticButton';
 import ProjectForm from '../../components/admin/ProjectForm';
 import './Dashboard.css';
+
+// RBAC constants
+const ROLES = {
+  ADMIN: 'admin',
+  EDITOR: 'editor',
+  VIEWER: 'viewer'
+};
+
+const PERMISSIONS = {
+  CREATE_PROJECT: 'create_project',
+  UPDATE_PROJECT: 'update_project',
+  DELETE_PROJECT: 'delete_project',
+  MANAGE_USERS: 'manage_users'
+};
+
+const ROLE_PERMISSIONS = {
+  [ROLES.ADMIN]: Object.values(PERMISSIONS),
+  [ROLES.EDITOR]: [PERMISSIONS.CREATE_PROJECT, PERMISSIONS.UPDATE_PROJECT],
+  [ROLES.VIEWER]: []
+};
 
 const CATEGORIES = ['All', 'Social Media', 'Motion Graphics', 'YouTube', 'Short-Form'];
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const [userRole] = useState(ROLES.EDITOR); // Default role
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('All');
@@ -22,6 +43,14 @@ export default function Dashboard() {
   const [editingProject, setEditingProject] = useState(null);
 
   const [selectedProjects, setSelectedProjects] = useState([]);
+  
+  const { pageTransition, fadeUp } = useAnimations();
+  // const { portfolio, updateSiteData } = useSiteStore(); // Removed unused variables
+  
+  // Check if user has permission
+  const hasPermission = (permission) => {
+    return ROLE_PERMISSIONS[userRole]?.includes(permission) || userRole === ROLES.ADMIN;
+  };
 
   useEffect(() => {
     fetchProjects();
@@ -49,16 +78,29 @@ export default function Dashboard() {
   };
 
   const handleAddNew = () => {
-    setEditingProject(null);
-    setIsFormOpen(true);
+    if (hasPermission(PERMISSIONS.CREATE_PROJECT)) {
+      setEditingProject(null);
+      setIsFormOpen(true);
+    } else {
+      alert('You do not have permission to create projects.');
+    }
   };
 
   const handleEdit = (project) => {
-    setEditingProject(project);
-    setIsFormOpen(true);
+    if (hasPermission(PERMISSIONS.UPDATE_PROJECT)) {
+      setEditingProject(project);
+      setIsFormOpen(true);
+    } else {
+      alert('You do not have permission to update projects.');
+    }
   };
 
   const handleDelete = async (id, imageUrl) => {
+    if (!hasPermission(PERMISSIONS.DELETE_PROJECT)) {
+      alert('You do not have permission to delete projects.');
+      return;
+    }
+    
     if (window.confirm('Are you sure you want to delete this project? This cannot be undone.')) {
       try {
         await projectService.deleteProject(id, imageUrl);
@@ -79,6 +121,11 @@ export default function Dashboard() {
   };
 
   const handleGroupDelete = async () => {
+    if (!hasPermission(PERMISSIONS.DELETE_PROJECT)) {
+      alert('You do not have permission to delete projects.');
+      return;
+    }
+    
     if (window.confirm(`Are you sure you want to delete ${selectedProjects.length} selected projects? This cannot be undone.`)) {
       setLoading(true);
       try {
@@ -237,6 +284,8 @@ export default function Dashboard() {
             initialData={editingProject} 
             onSubmit={handleFormSubmit} 
             onClose={() => setIsFormOpen(false)} 
+            hasPermission={hasPermission}
+            permissions={PERMISSIONS}
           />
         )}
       </AnimatePresence>

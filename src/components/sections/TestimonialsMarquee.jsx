@@ -6,7 +6,7 @@ import './TestimonialsMarquee.css';
 
 export default function TestimonialsMarquee() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const isInView = useInView(ref, { once: false, margin: '-100px' });
 
   // Duplicate testimonials for seamless loop
   const duplicated = [...TESTIMONIALS, ...TESTIMONIALS];

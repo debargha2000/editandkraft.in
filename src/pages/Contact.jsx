@@ -9,8 +9,8 @@ import './Contact.css';
 export default function Contact() {
   const formRef = useRef(null);
   const infoRef = useRef(null);
-  const formInView = useInView(formRef, { once: true, margin: '-50px' });
-  const infoInView = useInView(infoRef, { once: true, margin: '-50px' });
+  const formInView = useInView(formRef, { once: false, margin: '-50px' });
+  const infoInView = useInView(infoRef, { once: false, margin: '-50px' });
   const [formData, setFormData] = useState({});
   const [submitted, setSubmitted] = useState(false);
 
