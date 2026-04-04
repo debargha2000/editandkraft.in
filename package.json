@@ -40,7 +40,7 @@
     },
     "sourcemap-codec": "npm:@jridgewell/sourcemap-codec@latest",
     "@studio-freight/lenis": "npm:lenis@latest",
-    "glob": "^11.0.1",
+    "glob": "^13.0.6",
     "source-map": "^0.7.4"
   }
 }
