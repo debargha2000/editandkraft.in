@@ -119,11 +119,11 @@ export function getSEOForRoute(pathname = "/", overrides = {}) {
     title: routeConfig.title,
     description: routeConfig.description,
     keywords: routeConfig.keywords,
-    canonicalUrl: `${CANONICAL_BASE}/#${pathname === "/" ? "" : pathname}`,
+    canonicalUrl: `${CANONICAL_BASE}${pathname === "/" ? "" : pathname}`,
     ogTitle: routeConfig.title,
     ogDescription: routeConfig.description,
     ogType: routeConfig.ogType,
-    ogUrl: `${CANONICAL_BASE}/#${pathname === "/" ? "" : pathname}`,
+    ogUrl: `${CANONICAL_BASE}${pathname === "/" ? "" : pathname}`,
     ogSiteName: SITE.name,
     ogImage: `${CANONICAL_BASE}/og-image.jpg`,
     twitterCard: "summary_large_image",
@@ -219,7 +219,7 @@ export function getBreadcrumbSchema(pathname = "/") {
 
     breadcrumbs.push({
       name: pageName,
-      url: `${SITE.website}/#${pathname}`,
+      url: `${SITE.website}${pathname}`,
     });
   }
 

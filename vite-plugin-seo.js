@@ -30,7 +30,7 @@ export default function viteSeoPlugin() {
         "User-agent: *",
         "Allow: /",
         "",
-        `Sitemap: ${SITE_URL}/editandkraft.in/sitemap.xml`,
+        `Sitemap: ${SITE_URL}/sitemap.xml`,
         "",
         "# Crawl-delay suggestion (optional, respected by some bots)",
         "Crawl-delay: 1",
@@ -45,7 +45,7 @@ export default function viteSeoPlugin() {
       // ---- sitemap.xml ----
       const urlEntries = ROUTES.map(
         (route) => `  <url>
-    <loc>${SITE_URL}/editandkraft.in${route.path}</loc>
+    <loc>${SITE_URL}${route.path}</loc>
     <lastmod>${buildDate}</lastmod>
     <changefreq>${route.changefreq}</changefreq>
     <priority>${route.priority}</priority>

@@ -45,7 +45,6 @@ export default function Dashboard() {
   const [selectedProjects, setSelectedProjects] = useState([]);
   
   const { pageTransition, fadeUp } = useAnimations();
-  // const { portfolio, updateSiteData } = useSiteStore(); // Removed unused variables
   
   // Check if user has permission
   const hasPermission = (permission) => {
