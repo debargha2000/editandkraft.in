@@ -30,6 +30,12 @@ export default function Login() {
     setError('');
     setLoading(true);
     
+    if (!auth) {
+      setError('Firebase authentication is not configured.');
+      setLoading(false);
+      return;
+    }
+    
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       if (await checkAndRedirect(userCredential.user)) {
@@ -44,6 +50,13 @@ export default function Login() {
   const handleGoogleLogin = async () => {
     setError('');
     setLoading(true);
+    
+    if (!auth) {
+      setError('Firebase authentication is not configured.');
+      setLoading(false);
+      return;
+    }
+    
     const provider = new GoogleAuthProvider();
     
     try {
@@ -60,6 +73,24 @@ export default function Login() {
   };
 
   const formAnim = fadeUp(0.1, 0.8, 30);
+
+  if (!auth) {
+    return (
+      <motion.div className="admin-login-page" {...pageTransition}>
+        <div className="login-container glass">
+          <div className="login-content">
+            <div className="login-header">
+              <h2>Admin Portal</h2>
+              <p>Authentication service is currently unavailable.</p>
+            </div>
+            <div className="login-error">
+              Firebase configuration is missing. Please contact the administrator.
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div className="admin-login-page" {...pageTransition}>

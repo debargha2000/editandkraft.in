@@ -9,6 +9,12 @@ export default function ProtectedRoute({ children }) {
   const location = useLocation();
 
   useEffect(() => {
+    if (!auth) {
+      // Firebase not configured, skip authentication
+      setLoading(false);
+      return;
+    }
+
     // Listen for authentication state changes
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -31,6 +37,29 @@ export default function ProtectedRoute({ children }) {
       }}>
         <div style={{ opacity: 0.7, fontSize: '1.2rem', letterSpacing: '0.1em' }}>
           VERIFYING IDENTITY...
+        </div>
+      </div>
+    );
+  }
+
+  if (!auth) {
+    // Firebase not configured, allow access or show error
+    return (
+      <div style={{ 
+        minHeight: '100vh', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        background: 'var(--color-bg)',
+        color: 'var(--color-text)',
+        flexDirection: 'column',
+        gap: '1rem'
+      }}>
+        <div style={{ opacity: 0.7, fontSize: '1.2rem', letterSpacing: '0.1em' }}>
+          FIREBASE CONFIGURATION MISSING
+        </div>
+        <div style={{ opacity: 0.5, fontSize: '0.9rem' }}>
+          Please configure Firebase environment variables
         </div>
       </div>
     );

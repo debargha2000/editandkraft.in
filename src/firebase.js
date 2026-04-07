@@ -15,13 +15,27 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Check if all required Firebase config values are present
+const isFirebaseConfigured = Object.values(firebaseConfig).every(value => value && value.trim() !== '');
 
-// Initialize Services
-export const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
-export const db = getFirestore(app);
-export const auth = getAuth(app);
-export const storage = getStorage(app);
+let app = null;
+let analytics = null;
+let db = null;
+let auth = null;
+let storage = null;
 
+if (isFirebaseConfigured) {
+  // Initialize Firebase
+  app = initializeApp(firebaseConfig);
+
+  // Initialize Services
+  analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
+  db = getFirestore(app);
+  auth = getAuth(app);
+  storage = getStorage(app);
+} else {
+  console.warn('Firebase configuration is incomplete. Some features may not work.');
+}
+
+export { analytics, db, auth, storage };
 export default app;

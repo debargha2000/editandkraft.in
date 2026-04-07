@@ -18,6 +18,11 @@ const COLLECTION_NAME = 'projects';
 export const projectService = {
   // Fetch all projects, ordered by newest first
   async getProjects() {
+    if (!db) {
+      console.warn('Firebase Firestore not configured');
+      return [];
+    }
+    
     try {
       const q = query(collection(db, COLLECTION_NAME), orderBy('timestamp', 'desc'));
       const querySnapshot = await getDocs(q);
@@ -38,6 +43,10 @@ export const projectService = {
 
   // Add a new project
   async addProject(projectData, imageFile) {
+    if (!db) {
+      throw new Error('Firebase Firestore not configured');
+    }
+    
     try {
       let imageUrl = '';
       if (imageFile) {
@@ -62,6 +71,10 @@ export const projectService = {
 
   // Update an existing project
   async updateProject(id, projectData, newImageFile, oldImageUrl) {
+    if (!db) {
+      throw new Error('Firebase Firestore not configured');
+    }
+    
     try {
       const docRef = doc(db, COLLECTION_NAME, id);
       let imageUrl = projectData.imageUrl;
@@ -89,6 +102,10 @@ export const projectService = {
 
   // Delete a project
   async deleteProject(id, imageUrl) {
+    if (!db) {
+      throw new Error('Firebase Firestore not configured');
+    }
+    
     try {
       if (imageUrl) {
         await this.deleteImage(imageUrl);
@@ -105,6 +122,9 @@ export const projectService = {
 
   // Upload an image to Firebase Storage
   async uploadImage(file) {
+    if (!storage) {
+      throw new Error('Firebase Storage not configured');
+    }
     if (!file) return null;
     const storageRef = ref(storage, `projects/${Date.now()}_${file.name}`);
     await uploadBytes(storageRef, file);
@@ -113,6 +133,10 @@ export const projectService = {
 
   // Delete an image from Firebase Storage
   async deleteImage(imageUrl) {
+    if (!storage) {
+      console.warn('Firebase Storage not configured');
+      return;
+    }
     if (!imageUrl) return;
     try {
       const decodedUrl = decodeURIComponent(imageUrl.split('/o/')[1].split('?')[0]);
