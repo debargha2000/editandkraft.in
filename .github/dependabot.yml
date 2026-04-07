@@ -1,0 +1,33 @@
+version: 2
+updates:
+  # Enable version updates for npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      # Check for updates twice a week
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"
+    # Security updates will be enabled automatically
+    # Creating a pull request for any security updates
+    allow:
+      - dependency-type: "all"
+    reviewers:
+      - "debargha2000"
+    # Group updates for easier review
+    groups:
+      security:
+        patterns:
+          - "*security*"
+        update-types:
+          - "semver:patch"
+      minor:
+        patterns:
+          - "*"
+        dependency-type: "production"
+        update-types:
+          - "semver:minor"
+          - "semver:patch"
+    # Always open pull requests
+    pull-request-branch-name:
+      separator: "/"
