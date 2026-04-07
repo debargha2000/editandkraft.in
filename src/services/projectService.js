@@ -18,6 +18,11 @@ const COLLECTION_NAME = 'projects';
 export const projectService = {
   // Fetch all projects, ordered by newest first
   async getProjects() {
+    if (!db) {
+      console.warn('Firebase Firestore not configured');
+      return [];
+    }
+    
     try {
       const q = query(collection(db, COLLECTION_NAME), orderBy('timestamp', 'desc'));
       const querySnapshot = await getDocs(q);

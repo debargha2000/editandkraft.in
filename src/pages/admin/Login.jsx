@@ -30,6 +30,12 @@ export default function Login() {
     setError('');
     setLoading(true);
     
+    if (!auth) {
+      setError('Firebase authentication is not configured.');
+      setLoading(false);
+      return;
+    }
+    
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       if (await checkAndRedirect(userCredential.user)) {
@@ -44,6 +50,13 @@ export default function Login() {
   const handleGoogleLogin = async () => {
     setError('');
     setLoading(true);
+    
+    if (!auth) {
+      setError('Firebase authentication is not configured.');
+      setLoading(false);
+      return;
+    }
+    
     const provider = new GoogleAuthProvider();
     
     try {

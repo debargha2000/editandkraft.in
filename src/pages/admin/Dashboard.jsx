@@ -70,7 +70,9 @@ export default function Dashboard() {
 
   const handleLogout = async () => {
     try {
-      await signOut(auth);
+      if (auth) {
+        await signOut(auth);
+      }
       navigate('/admin/login');
     } catch (error) {
       console.error("Failed to log out", error);
