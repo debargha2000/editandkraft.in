@@ -45,6 +45,7 @@ export default function Dashboard() {
   const [selectedProjects, setSelectedProjects] = useState([]);
   
   const { pageTransition, fadeUp } = useAnimations();
+  // const { portfolio, updateSiteData } = useSiteStore(); // Removed unused variables
   
   // Check if user has permission
   const hasPermission = (permission) => {
@@ -69,9 +70,7 @@ export default function Dashboard() {
 
   const handleLogout = async () => {
     try {
-      if (auth) {
-        await signOut(auth);
-      }
+      await signOut(auth);
       navigate('/admin/login');
     } catch (error) {
       console.error("Failed to log out", error);

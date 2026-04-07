@@ -15,6 +15,7 @@ export default function Work() {
   const isInView = useInView(ref, { once: false, margin: '-50px' });
   
   const { pageTransition, fadeUp, scaleUp } = useAnimations();
+  // const { portfolio } = useSiteStore(); // Removed unused variable
 
   useEffect(() => {
     const fetchProjects = async () => {
