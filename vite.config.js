@@ -22,9 +22,48 @@ export default defineConfig({
     }),
     VitePWA({
       registerType: 'autoUpdate',
+      useFilenames: false,
+      manifest: {
+        name: 'EditAndKraft',
+        short_name: 'EditAndKraft',
+        description: 'Professional Web Design & Development Portfolio',
+        theme_color: '#000000',
+        background_color: '#ffffff',
+        display: 'standalone',
+        scope: '/',
+        start_url: '/',
+        icons: [
+          {
+            src: '/favicon.svg',
+            sizes: 'any',
+            type: 'image/svg+xml',
+            purpose: 'any'
+          }
+        ]
+      },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,avif}']
-      }
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,avif}'],
+        cleanupOutdatedCaches: true,
+        skipWaiting: true,
+        clientsClaim: true,
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
+              }
+            }
+          }
+        ]
+      },
+      devOptions: {
+        enabled: false
+      },
+      strategies: 'generateSW'
     }),
   ],
   base: '/',

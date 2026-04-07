@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node --no-warnings build.js",
     "lint": "eslint .",
     "preview": "vite preview",
     "audit": "npm audit",
@@ -37,18 +37,23 @@
     "svgo": "^4.0.1",
     "vite": "^8.0.5",
     "vite-plugin-image-optimizer": "^2.0.3",
-    "vite-plugin-pwa": "^0.20.0",
+    "vite-plugin-pwa": "^0.19.8",
     "vite-plugin-svgr": "^4.5.0"
   },
   "overrides": {
+    "serialize-javascript": "^6.0.2",
     "vite-plugin-pwa": {
-      "vite": "$vite",
+      "serialize-javascript": "^6.0.2",
+      "workbox-build": {
+        "serialize-javascript": "^6.0.2"
+      }
+    },
+    "@rollup/plugin-terser": {
       "serialize-javascript": "^6.0.2"
     },
     "sourcemap-codec": "npm:@jridgewell/sourcemap-codec@latest",
     "@studio-freight/lenis": "npm:lenis@latest",
     "glob": "^13.0.6",
-    "source-map": "^0.7.4",
-    "serialize-javascript": "^6.0.2"
+    "source-map": "^0.7.4"
   }
 }

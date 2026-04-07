@@ -95,7 +95,8 @@ export default function ProjectForm({ initialData = null, onSubmit, onClose, has
     try {
       await onSubmit(formData, imageFile);
     } catch (error) {
-      console.error(error);
+      console.error("Form submission error:", error);
+      alert(error.message || 'Failed to submit form. Please check the console for details.');
     } finally {
       setIsSubmitting(false);
     }

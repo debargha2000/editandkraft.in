@@ -63,6 +63,7 @@ export default function Dashboard() {
       setProjects(data);
     } catch (error) {
       console.error("Failed to load projects", error);
+      alert(`Failed to load projects: ${error.message || 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
@@ -109,7 +110,7 @@ export default function Dashboard() {
         fetchProjects(); // Refresh list
       } catch (error) {
         console.error("Failed to delete", error);
-        alert('Failed to delete project. Check console for details.');
+        alert(`Failed to delete project: ${error.message || 'Unknown error'}`);
       }
     }
   };
