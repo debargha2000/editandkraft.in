@@ -12,22 +12,20 @@ updates:
     # Creating a pull request for any security updates
     allow:
       - dependency-type: "all"
-    reviewers:
-      - "debargha2000"
     # Group updates for easier review
     groups:
       security:
         patterns:
           - "*security*"
         update-types:
-          - "semver:patch"
-      minor:
+          - "patch"
+      dev-dependencies:
         patterns:
           - "*"
-        dependency-type: "production"
+        dependency-type: "development"
         update-types:
-          - "semver:minor"
-          - "semver:patch"
+          - "minor"
+          - "patch"
     # Always open pull requests
     pull-request-branch-name:
       separator: "/"
