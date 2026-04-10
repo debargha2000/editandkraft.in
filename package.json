@@ -13,7 +13,14 @@
     "audit:fix:force": "npm audit fix --force",
     "deps:outdated": "npm outdated",
     "deps:list": "npm ls",
-    "security:check": "npm audit --audit-level=high"
+    "security:check": "npm audit --audit-level=high",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "e2e": "playwright test",
+    "e2e:install": "playwright install",
+    "e2e:headed": "playwright test --headed"
   },
   "dependencies": {
     "firebase": "^12.11.0",
@@ -26,30 +33,40 @@
     "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.1",
     "@eslint/js": "^9.39.4",
+    "@playwright/test": "^1.59.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.1",
+    "@vitejs/plugin-react": "^5.0.0",
+    "@vitest/coverage-v8": "^4.1.4",
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
+    "jsdom": "^29.0.2",
+    "lightningcss": "^1.32.0",
+    "playwright": "^1.59.1",
     "svgo": "^4.0.1",
-    "vite": "^8.0.5",
+    "vite": "^7.0.0",
     "vite-plugin-image-optimizer": "^2.0.3",
-    "vite-plugin-pwa": "^0.19.8",
-    "vite-plugin-svgr": "^4.5.0"
+    "vite-plugin-pwa": "^1.2.0",
+    "vite-plugin-svgr": "^4.5.0",
+    "vitest": "^4.1.4"
   },
   "overrides": {
-    "serialize-javascript": "^6.0.2",
+    "serialize-javascript": "^7.0.5",
     "vite-plugin-pwa": {
-      "serialize-javascript": "^6.0.2",
+      "serialize-javascript": "^7.0.5",
       "workbox-build": {
-        "serialize-javascript": "^6.0.2"
+        "serialize-javascript": "^7.0.5"
       }
     },
     "@rollup/plugin-terser": {
-      "serialize-javascript": "^6.0.2"
+      "serialize-javascript": "^7.0.5"
     },
     "sourcemap-codec": "npm:@jridgewell/sourcemap-codec@latest",
     "@studio-freight/lenis": "npm:lenis@latest",

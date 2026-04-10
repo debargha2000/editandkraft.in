@@ -96,6 +96,7 @@ export class FirebaseErrorHandler {
     }
   }
 
+  // eslint-disable-next-line no-unused-vars
   static reportToAnalytics(error, context) {
     // Placeholder for analytics reporting
     // Add your error tracking service here

@@ -9,12 +9,6 @@ export default function ProtectedRoute({ children }) {
   const location = useLocation();
 
   useEffect(() => {
-    // Check if auth is available
-    if (!auth) {
-      setLoading(false);
-      return;
-    }
-
     // Listen for authentication state changes
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);

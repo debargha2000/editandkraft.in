@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import svgr from 'vite-plugin-svgr'
-import { ViteImageOptimizer } from 'vite-plugin-image-optimizer'
 import { VitePWA } from 'vite-plugin-pwa'
 import viteSeoPlugin from './vite-plugin-seo.js'
 
@@ -10,16 +9,6 @@ export default defineConfig({
     react(),
     svgr(),
     viteSeoPlugin(),
-    ViteImageOptimizer({
-      png: { quality: 80 },
-      jpeg: { quality: 80 },
-      svg: { 
-        plugins: [
-          { name: 'removeViewBox', active: false },
-          { name: 'cleanupIds', active: false }
-        ] 
-      }
-    }),
     VitePWA({
       registerType: 'autoUpdate',
       useFilenames: false,
@@ -67,20 +56,33 @@ export default defineConfig({
     }),
   ],
   base: '/',
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.js'],
+    exclude: ['e2e/**', 'node_modules/**'],
+    include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+  },
   build: {
     target: 'es2020',
     assetsInlineLimit: 4096,
-    cssMinify: 'lightningcss',
+    minify: 'esbuild',
+    cssMinify: 'esbuild',
+    sourcemap: false,
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('firebase')) return 'firebase';
-            if (id.includes('framer-motion')) return 'framer-motion';
-            if (id.includes('react-router') || id.includes('@remix-run')) return 'react-router';
-            if (id.includes('react')) return 'react-core';
-            return 'vendor';
-          }
+          if (!id.includes('node_modules')) return;
+
+          const parts = id.split('node_modules/').pop().split('/');
+          const pkg = parts[0].startsWith('@') ? `${parts[0]}/${parts[1]}` : parts[0];
+
+          if (pkg === 'firebase') return 'firebase';
+          if (pkg === 'framer-motion') return 'framer-motion';
+          if (pkg === 'zustand') return 'zustand';
+          if (pkg === 'react-helmet-async') return 'react-helmet';
+          return 'vendor';
         }
       }
     }
