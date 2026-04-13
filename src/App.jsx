@@ -1,6 +1,7 @@
 import { lazy, Suspense, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+import { Analytics } from '@vercel/analytics/react';
 
 import RootLayout from './components/layout/RootLayout';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -59,6 +60,7 @@ export default function App() {
           <AnimatedRoutes />
         </RootLayout>
       </Router>
+      <Analytics />
     </>
   );
 }
