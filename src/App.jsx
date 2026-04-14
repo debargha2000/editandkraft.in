@@ -5,6 +5,7 @@ import { AnimatePresence } from 'framer-motion';
 import RootLayout from './components/layout/RootLayout';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Preloader from './components/ui/Preloader';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const Home = lazy(() => import('./pages/Home'));
 const Work = lazy(() => import('./pages/Work'));
@@ -50,7 +51,7 @@ export default function App() {
   }, [isSiteLoaded]);
 
   return (
-    <>
+    <ErrorBoundary>
       <Preloader onComplete={() => setIsSiteLoaded(true)} />
       
       {/* We keep the router mounted, but we can delay pointer events or just let the preloader overlap it */}
@@ -59,6 +60,6 @@ export default function App() {
           <AnimatedRoutes />
         </RootLayout>
       </Router>
-    </>
+    </ErrorBoundary>
   );
 }

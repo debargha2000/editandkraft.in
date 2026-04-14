@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import svgr from 'vite-plugin-svgr'
 import { VitePWA } from 'vite-plugin-pwa'
+import { ViteImageOptimizer } from 'vite-plugin-image-optimizer'
 import viteSeoPlugin from './vite-plugin-seo.js'
 
 export default defineConfig({
@@ -9,6 +10,12 @@ export default defineConfig({
     react(),
     svgr(),
     viteSeoPlugin(),
+    ViteImageOptimizer({
+      png: { quality: 80 },
+      jpeg: { quality: 80 },
+      webp: { quality: 80 },
+      avif: { quality: 80 }
+    }),
     VitePWA({
       registerType: 'autoUpdate',
       useFilenames: false,
