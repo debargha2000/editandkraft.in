@@ -12,7 +12,7 @@ export const SITE = {
   description:
     "Premium digital marketing & creative agency specializing in scroll-stopping visual experiences that transform brands across India.",
   email: "teams@editandkraft.in",
-  phone: "+91 98765 43210",
+  phone: "+91 83368 76464",
   website: "https://editandkraft.in",
   location: "India",
   copyright: `© ${new Date().getFullYear()} Edit & Kraft. All rights reserved.`,
