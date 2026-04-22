@@ -5,6 +5,8 @@ import { VitePWA } from 'vite-plugin-pwa'
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer'
 import viteSeoPlugin from './vite-plugin-seo.js'
 
+const basePath = process.env.VITE_BASE_PATH || '/';
+
 export default defineConfig({
   plugins: [
     react(),
@@ -26,8 +28,8 @@ export default defineConfig({
         theme_color: '#000000',
         background_color: '#ffffff',
         display: 'standalone',
-        scope: '/',
-        start_url: '/',
+        scope: basePath,
+        start_url: basePath,
         icons: [
           {
             src: '/favicon.svg',
@@ -62,7 +64,7 @@ export default defineConfig({
       strategies: 'generateSW'
     }),
   ],
-  base: '/',
+  base: basePath,
   test: {
     globals: true,
     environment: 'jsdom',
