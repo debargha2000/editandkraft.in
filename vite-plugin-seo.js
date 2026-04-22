@@ -30,7 +30,7 @@ export default function viteSeoPlugin() {
         "User-agent: *",
         "Allow: /",
         "",
-        `Sitemap: ${SITE_URL}/editandkraft.in/sitemap.xml`,
+        `Sitemap: ${SITE_URL}/sitemap.xml`,
         "",
         "# Crawl-delay suggestion (optional, respected by some bots)",
         "Crawl-delay: 1",
@@ -45,7 +45,7 @@ export default function viteSeoPlugin() {
       // ---- sitemap.xml ----
       const urlEntries = ROUTES.map(
         (route) => `  <url>
-    <loc>${SITE_URL}/editandkraft.in${route.path}</loc>
+    <loc>${SITE_URL}${route.path}</loc>
     <lastmod>${buildDate}</lastmod>
     <changefreq>${route.changefreq}</changefreq>
     <priority>${route.priority}</priority>
@@ -64,29 +64,7 @@ ${urlEntries}
       });
 
       console.log(`\n🔍 SEO Plugin: Generated robots.txt and sitemap.xml (lastmod: ${buildDate})\n`);
-    },
-    transformIndexHtml(html) {
-      // Inject standard SEO metadata
-      const headInjection = `
-    <!-- Open Graph / SEO Tags -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Edit & Kraft" />
-    <meta property="og:description" content="Professional Web Design & Development Portfolio" />
-    <meta property="og:url" content="${SITE_URL}/" />
-    <meta property="og:site_name" content="Edit & Kraft" />
-    <link rel="canonical" href="${SITE_URL}/" />
-    <!-- JSON-LD Structured Data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Edit & Kraft",
-      "url": "${SITE_URL}/",
-      "description": "Professional Web Design & Development Portfolio"
     }
-    </script>
-      `;
-      return html.replace('</head>', headInjection + '</head>');
-    }
+
   };
 }
