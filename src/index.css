@@ -3,7 +3,12 @@
 @layer base {
   body {
     background-color: #000000 !important;
+    cursor: none !important;
   }
+}
+
+* {
+  cursor: none !important;
 }
 
 canvas[aria-hidden="true"] {

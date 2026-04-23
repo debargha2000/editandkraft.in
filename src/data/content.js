@@ -153,7 +153,7 @@ export const PLANS = [
       "Scalable Advertising Solutions"
     ],
     ctaText: "Get In Touch",
-    ctaLink: "/#/contact",
+    ctaLink: "/contact",
     isExternal: false,
     popular: false
   }

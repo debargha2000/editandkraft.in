@@ -8,24 +8,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=Marcellus&display=swap');
 
 /* ---- CSS Reset ---- */
-/* *,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  cursor: none !important;
-} */
-
 *,
 *::before,
 *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-body.cursor-enabled {
   cursor: none !important;
 }
 
