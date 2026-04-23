@@ -1,13 +1,12 @@
-@import "tailwindcss";
-
-@layer base {
-  body {
-    background-color: #000000 !important;
-    cursor: none !important;
-  }
-}
+/* Root entry — no framework CSS imports needed */
+/* All design tokens and styles are in styles/index.css */
 
 * {
+  cursor: none !important;
+}
+
+body {
+  background-color: #000000 !important;
   cursor: none !important;
 }
 

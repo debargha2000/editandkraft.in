@@ -38,22 +38,12 @@ export const fadeUp = (delay = 0, duration = 0.8, y = 60) => {
   };
 };
 
-// Fade in (opacity only)
-export const fadeIn = (delay = 0, duration = 0.8) => {
-  if (prefersReducedMotion) {
-    return {
-      initial: { opacity: 0 },
-      animate: { opacity: 1 },
-      transition: { duration, delay },
-    };
-  }
-  
-  return {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    transition: { duration, delay },
-  };
-};
+// Fade in (opacity only — same regardless of motion preference)
+export const fadeIn = (delay = 0, duration = 0.8) => ({
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  transition: { duration, delay },
+});
 
 // Scale up reveal
 export const scaleUp = (delay = 0, duration = 0.5) => {
