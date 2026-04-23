@@ -11,7 +11,7 @@ service cloud.firestore {
     function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
     function isVerifiedAdmin() { 
       return isSignedIn() && 
-      (request.auth.token.email == 'debarghapakhira@gmail.com' || request.auth.token.email == 'deys87714@gmail.com') &&
+      (request.auth.token.email == 'debarghapakhira@gmail.com') &&
       request.auth.token.email_verified == true;
     }
 

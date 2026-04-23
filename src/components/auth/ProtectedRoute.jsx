@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../firebase';
+import { ALLOWED_EMAILS } from '../../utils/authConfig';
 
 export default function ProtectedRoute({ children }) {
   const [loading, setLoading] = useState(true);
@@ -36,10 +37,8 @@ export default function ProtectedRoute({ children }) {
     );
   }
 
-  if (!user) {
-    // Redirect them to the /admin/login page, but save the current location they were
-    // trying to go to when they were redirected. This allows us to send them
-    // along to that page after they login, which is a nicer user experience.
+  if (!user || !ALLOWED_EMAILS.includes(user.email)) {
+    // Redirect them to the /admin/login page
     return <Navigate to="/admin/login" state={{ from: location }} replace />;
   }
 

@@ -8,7 +8,7 @@ import { pageTransition, fadeUp } from '../../utils/animations';
 import MagneticButton from '../../components/ui/MagneticButton';
 import './Login.css';
 
-const ALLOWED_EMAILS = ["debarghapakhira@gmail.com", "deys87714@gmail.com"];
+import { ALLOWED_EMAILS } from '../../utils/authConfig';
 
 // ⚠️ Add these for Google Provider configuration:
 let googleAuthProvider = null; // Initialize outside component to avoid re-creation
