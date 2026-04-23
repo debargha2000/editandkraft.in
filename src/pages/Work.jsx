@@ -15,7 +15,6 @@ export default function Work() {
   const isInView = useInView(ref, { once: false, margin: '-50px' });
   
   const { pageTransition, fadeUp, scaleUp } = useAnimations();
-  // const { portfolio } = useSiteStore(); // Removed unused variable
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -61,13 +60,13 @@ export default function Work() {
             transition={filterBarAnim.transition}
           >
             {CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                className={`work-filter ${activeCategory === cat ? 'work-filter--active' : ''}`}
-                onClick={() => setActiveCategory(cat)}
-              >
-                {cat}
-              </button>
+                <button
+                  key={cat}
+                  className={`work-filter button ${activeCategory === cat ? 'work-filter--active' : ''}`}
+                  onClick={() => setActiveCategory(cat)}
+                >
+                  {cat}
+                </button>
             ))}
           </motion.div>
 
@@ -88,7 +87,7 @@ export default function Work() {
                   return (
                     <motion.div
                       key={project.id || index}
-                      className="work-card"
+                      className="work-card glass glass-shine"
                       layout
                       initial={cardAnim.initial}
                       animate={cardAnim.animate}

@@ -14,17 +14,29 @@
   margin-bottom: var(--space-xl);
 }
 
+.work-filter {
+  /* Inherits from .button now */
+  font-size: var(--text-xs);
+  padding: 0.6rem 1.4rem;
+}
 
 .work-filter--active {
-  background: var(--color-white) !important;
-  color: #000 !important;
-  border-color: var(--color-white) !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+  border-color: #ffffff !important;
   font-weight: 600;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
 }
 
 .work-filter--active:hover {
-  color: #000 !important;
-  opacity: 0.9;
+  background: #ffffff !important;
+  color: #000000 !important;
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.work-filter--active:active {
+  transform: scale(0.95);
 }
 
 /* Grid */
@@ -37,12 +49,21 @@
 /* Work Card */
 .work-card {
   position: relative;
+  padding: 1.5rem;
+  border-radius: 2.5rem;
+  transition: all 0.5s var(--ease-out-expo);
+  cursor: pointer;
+}
+
+.work-card:active {
+  transform: scale(0.98);
 }
 
 .work-card__image {
   position: relative;
   overflow: hidden;
   aspect-ratio: 4 / 3;
+  border-radius: 1.5rem;
 }
 
 .work-card__image-inner {
@@ -126,7 +147,6 @@
   .work-grid {
     grid-template-columns: 1fr;
   }
-
   .work-filters {
     justify-content: center;
     gap: 0.6rem;

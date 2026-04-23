@@ -10,7 +10,6 @@ export default function TestimonialsMarquee() {
 
   // Duplicate testimonials for seamless loop
   const duplicated = [...TESTIMONIALS, ...TESTIMONIALS];
-
   const labelAnim = fadeUp(0, 0.8, 30);
   const marqueeAnim = fadeIn(0.3, 1);
 

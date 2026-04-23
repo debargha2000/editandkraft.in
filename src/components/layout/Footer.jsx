@@ -55,12 +55,14 @@ export default function Footer() {
             <Link to="/" className="footer__logo">{SITE.name}</Link>
             <p className="footer__tagline">{SITE.tagline}</p>
           </div>
+
           <div className="footer__email">
             <span className="footer__email-label">Get in touch</span>
             <a href={`mailto:${SITE.email}`} className="footer__email-link">
               {SITE.email}
             </a>
           </div>
+
           <div className="footer__socials">
             {FOOTER.socialLinks.map((social) => (
               <a

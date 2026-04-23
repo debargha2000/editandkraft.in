@@ -9,6 +9,7 @@ export default function About() {
   const storyRef = useRef(null);
   const philosRef = useRef(null);
   const timelineRef = useRef(null);
+  
   const storyInView = useInView(storyRef, { once: false, margin: '-100px' });
   const philosInView = useInView(philosRef, { once: false, margin: '-100px' });
   const timelineInView = useInView(timelineRef, { once: false, margin: '-100px' });

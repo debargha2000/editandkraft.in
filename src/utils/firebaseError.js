@@ -2,11 +2,9 @@
  * Firebase Error Handler
  * Provides consistent error handling and logging across the application
  */
-
 export class FirebaseErrorHandler {
   static getErrorMessage(error) {
     if (!error) return 'An unexpected error occurred';
-
     // Firebase Auth Errors
     if (error.code) {
       switch (error.code) {
@@ -28,7 +26,6 @@ export class FirebaseErrorHandler {
           return 'Login popup was closed. Please try again.';
         case 'auth/network-request-failed':
           return 'Network error. Please check your connection.';
-
         // Firestore Errors
         case 'permission-denied':
           return 'You do not have permission to perform this action.';
@@ -46,7 +43,6 @@ export class FirebaseErrorHandler {
           return 'The operation was aborted. Please try again.';
         case 'deadline-exceeded':
           return 'The operation took too long. Please try again.';
-
         // Storage Errors
         case 'storage/object-not-found':
           return 'The file was not found.';
@@ -66,21 +62,17 @@ export class FirebaseErrorHandler {
           return 'Invalid file or operation.';
         case 'storage/server-file-wrong-size':
           return 'File size mismatch. Please try uploading again.';
-
         // Generic error
         default:
           return error.message || 'An unexpected error occurred';
       }
     }
-
     // Standard JavaScript errors
     if (error instanceof TypeError) return 'Invalid operation or data type.';
     if (error instanceof RangeError) return 'Value is out of valid range.';
     if (error instanceof SyntaxError) return 'Invalid data format.';
-
     return error.message || 'An unexpected error occurred';
   }
-
   static logError(error, context = '') {
     console.error(`[Firebase Error ${context}]:`, {
       code: error.code,
@@ -88,20 +80,17 @@ export class FirebaseErrorHandler {
       details: error.details,
       timestamp: new Date().toISOString(),
     });
-
     // In production, you could send this to error tracking service
     // Example: Sentry, LogRocket, etc.
     if (import.meta.env.PROD) {
       this.reportToAnalytics(error, context);
     }
   }
-
   // eslint-disable-next-line no-unused-vars
   static reportToAnalytics(error, context) {
     // Placeholder for analytics reporting
     // Add your error tracking service here
   }
-
   static isRetryable(error) {
     const retryableCodes = [
       'network-request-failed',
@@ -112,7 +101,6 @@ export class FirebaseErrorHandler {
     ];
     return retryableCodes.includes(error.code);
   }
-
   static getHTTPStatusCode(error) {
     const codeMap = {
       'permission-denied': 403,
@@ -126,23 +114,19 @@ export class FirebaseErrorHandler {
     return codeMap[error.code] || 500;
   }
 }
-
 /**
  * Retry utility with exponential backoff
  */
 export async function retryWithExponentialBackoff(fn, maxRetries = 3) {
   let lastError;
-
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
       return await fn();
     } catch (error) {
       lastError = error;
-
       if (!FirebaseErrorHandler.isRetryable(error)) {
         throw error;
       }
-
       if (attempt < maxRetries - 1) {
         // Exponential backoff: 1s, 2s, 4s
         const delay = Math.pow(2, attempt) * 1000;
@@ -150,6 +134,5 @@ export async function retryWithExponentialBackoff(fn, maxRetries = 3) {
       }
     }
   }
-
   throw lastError;
 }

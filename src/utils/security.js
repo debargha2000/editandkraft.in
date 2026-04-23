@@ -2,14 +2,12 @@
  * Rate Limiting Utilities
  * Prevents abuse and ensures fair usage
  */
-
 export class RateLimiter {
   constructor(maxRequests = 10, windowMS = 60000) {
     this.maxRequests = maxRequests;
     this.windowMS = windowMS;
     this.requests = [];
   }
-
   /**
    * Check if request is allowed
    */
@@ -27,7 +25,6 @@ export class RateLimiter {
     
     return false;
   }
-
   /**
    * Get remaining requests
    */
@@ -36,7 +33,6 @@ export class RateLimiter {
     this.requests = this.requests.filter(time => now - time < this.windowMS);
     return Math.max(0, this.maxRequests - this.requests.length);
   }
-
   /**
    * Get reset time in seconds
    */
@@ -47,7 +43,6 @@ export class RateLimiter {
     const timeUntilReset = Math.max(0, resetTime - Date.now());
     return Math.ceil(timeUntilReset / 1000);
   }
-
   /**
    * Reset the limiter
    */
@@ -55,7 +50,6 @@ export class RateLimiter {
     this.requests = [];
   }
 }
-
 /**
  * Create rate limiters for different operations
  */
@@ -75,7 +69,6 @@ export const rateLimiters = {
   // 100 API calls per minute
   api: new RateLimiter(100, 60000)
 };
-
 /**
  * Check if operation is rate limited
  */
@@ -86,7 +79,6 @@ export function checkRateLimit(operationType) {
     console.warn(`Unknown rate limit type: ${operationType}`);
     return { allowed: true };
   }
-
   if (!limiter.isAllowed()) {
     return {
       allowed: false,
@@ -94,13 +86,11 @@ export function checkRateLimit(operationType) {
       message: `Too many ${operationType} attempts. Please wait ${limiter.getResetTime()} seconds.`
     };
   }
-
   return {
     allowed: true,
     remaining: limiter.getRemaining()
   };
 }
-
 /**
  * Debounce function for UI operations
  */
@@ -112,7 +102,6 @@ export function debounce(fn, delay = 300) {
     timeoutId = setTimeout(() => fn(...args), delay);
   };
 }
-
 /**
  * Throttle function for repeated operations
  */
@@ -127,7 +116,6 @@ export function throttle(fn, limit = 1000) {
     }
   };
 }
-
 /**
  * Security context for sensitive operations
  */
@@ -140,14 +128,12 @@ export class SecurityContext {
     this.sessionStarted = Date.now();
     this.lastActivity = Date.now();
   }
-
   /**
    * Generate session token
    */
   generateSessionToken() {
     return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   }
-
   /**
    * Check if session is valid
    */
@@ -155,14 +141,12 @@ export class SecurityContext {
     const inactivity = Date.now() - this.lastActivity;
     return inactivity < maxInactivityMS;
   }
-
   /**
    * Update last activity
    */
   updateActivity() {
     this.lastActivity = Date.now();
   }
-
   /**
    * Check permission
    */
@@ -172,10 +156,8 @@ export class SecurityContext {
       editor: ['read:projects', 'create:projects', 'update:projects'],
       admin: ['read:projects', 'create:projects', 'update:projects', 'delete:projects', 'manage:users']
     };
-
     return permissions[this.role]?.includes(permission) || false;
   }
-
   /**
    * Check if user is admin
    */
@@ -183,7 +165,6 @@ export class SecurityContext {
     return this.role === 'admin';
   }
 }
-
 /**
  * CSRF Token management
  */
@@ -192,25 +173,20 @@ export class CSRFTokenManager {
     const token = crypto.getRandomValues(new Uint8Array(32));
     return Array.from(token, byte => byte.toString(16).padStart(2, '0')).join('');
   }
-
   static storeToken(token) {
     sessionStorage.setItem('csrf_token', token);
   }
-
   static getToken() {
     return sessionStorage.getItem('csrf_token');
   }
-
   static validateToken(token) {
     const stored = this.getToken();
     return stored && stored === token;
   }
-
   static clearToken() {
     sessionStorage.removeItem('csrf_token');
   }
 }
-
 /**
  * Security headers for API requests
  */
@@ -222,7 +198,6 @@ export function getSecurityHeaders(userId) {
     'Content-Type': 'application/json'
   };
 }
-
 /**
  * Validate request origin
  */
@@ -233,11 +208,9 @@ export function isValidOrigin(origin) {
     'http://localhost:5173', // Vite dev server
     'http://localhost:3000'  // Alternative port
   ];
-
   if (import.meta.env.DEV) {
     // Allow localhost in development
     return origin?.includes('localhost');
   }
-
   return allowedOrigins.includes(origin);
 }

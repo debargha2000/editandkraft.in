@@ -4,7 +4,6 @@
 // Centralized animation config. Every component should import
 // from here instead of hardcoding easing / transition values.
 // ============================================================
-
 // ---- Shared easing curves (mirrors CSS vars) ----
 export const EASE_EXPO = [0.16, 1, 0.3, 1];
 export const EASE_IN_OUT = [0.65, 0, 0.35, 1];
@@ -22,7 +21,6 @@ const prefersReducedMotion = typeof window !== 'undefined'
   : false;
 
 // ---- Common variants ----
-
 // Fade up from below (most-used across the site)
 export const fadeUp = (delay = 0, duration = 0.8, y = 60) => {
   if (prefersReducedMotion) {
@@ -109,8 +107,6 @@ export const lineGrow = (delay = 0, duration = 1.2) => {
     transition: expoTransition(duration, delay),
   };
 };
-
-
 
 // Page transition (used by every page wrapper)
 export const pageTransition = prefersReducedMotion ? {

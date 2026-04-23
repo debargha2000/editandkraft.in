@@ -1,150 +1,107 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+// ⚠️ THIS IMPORT IS CRITICAL:
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { projectService } from '../../services/projectService';
-import { useAnimations } from '../../hooks/useAnimations';
-import MagneticButton from '../../components/ui/MagneticButton';
+import { FirebaseErrorHandler } from '../../utils/firebaseError';
+import { pageTransition, fadeUp } from '../../utils/animations';
 import ProjectForm from '../../components/admin/ProjectForm';
+import MagneticButton from '../../components/ui/MagneticButton';
 import './Dashboard.css';
 
-// RBAC constants
-const ROLES = {
-  ADMIN: 'admin',
-  EDITOR: 'editor',
-  VIEWER: 'viewer'
-};
-
-const PERMISSIONS = {
+// RBAC Permissions (Hardcoded for simplicity in this turn)
+const ADMIN_PERMISSIONS = {
+  MANAGE_PROJECTS: 'manage_projects',
   CREATE_PROJECT: 'create_project',
   UPDATE_PROJECT: 'update_project',
   DELETE_PROJECT: 'delete_project',
   MANAGE_USERS: 'manage_users'
 };
 
-const ROLE_PERMISSIONS = {
-  [ROLES.ADMIN]: Object.values(PERMISSIONS),
-  [ROLES.EDITOR]: [PERMISSIONS.CREATE_PROJECT, PERMISSIONS.UPDATE_PROJECT],
-  [ROLES.VIEWER]: []
+const USER_ROLES = {
+  ADMIN: {
+    name: 'Admin',
+    permissions: [
+      ADMIN_PERMISSIONS.MANAGE_PROJECTS,
+      ADMIN_PERMISSIONS.CREATE_PROJECT,
+      ADMIN_PERMISSIONS.UPDATE_PROJECT,
+      ADMIN_PERMISSIONS.DELETE_PROJECT
+    ]
+  }
 };
 
-const CATEGORIES = ['All', 'Social Media', 'Motion Graphics', 'YouTube', 'Short-Form'];
-
 export default function Dashboard() {
-  const navigate = useNavigate();
-  const [userRole] = useState(ROLES.EDITOR); // Default role
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState('All');
-  
-  // Editor State
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
 
-  const [selectedProjects, setSelectedProjects] = useState([]);
-  
-  const { pageTransition, fadeUp } = useAnimations();
-  // const { portfolio, updateSiteData } = useSiteStore(); // Removed unused variables
-  
-  // Check if user has permission
-  const hasPermission = (permission) => {
-    return ROLE_PERMISSIONS[userRole]?.includes(permission) || userRole === ROLES.ADMIN;
-  };
-
-  useEffect(() => {
-    fetchProjects();
+  // Simple RBAC check
+  const hasPermission = useCallback((permission) => {
+    // For this build, if you're in the dashboard, you're an admin
+    return USER_ROLES.ADMIN.permissions.includes(permission);
   }, []);
 
-  const fetchProjects = async () => {
+  const fetchProjects = useCallback(async () => {
     setLoading(true);
     try {
       const data = await projectService.getProjects();
       setProjects(data);
     } catch (error) {
-      console.error("Failed to load projects", error);
-      alert(`Failed to load projects: ${error.message || 'Unknown error'}`);
+      FirebaseErrorHandler.handle(error, 'fetching projects');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
 
   const handleLogout = async () => {
     try {
-      if (auth) {
-        await signOut(auth);
-      }
+      await signOut(auth);
       navigate('/admin/login');
     } catch (error) {
-      console.error("Failed to log out", error);
+      console.error("Logout error:", error);
+      FirebaseErrorHandler.handle(error, 'logging out');
     }
   };
 
-  const handleAddNew = () => {
-    if (hasPermission(PERMISSIONS.CREATE_PROJECT)) {
-      setEditingProject(null);
-      setIsFormOpen(true);
-    } else {
-      alert('You do not have permission to create projects.');
+  const handleAddProject = () => {
+    if (!hasPermission(ADMIN_PERMISSIONS.CREATE_PROJECT)) {
+      alert("You don't have permission to create projects.");
+      return;
     }
+    setEditingProject(null);
+    setIsFormOpen(true);
   };
 
-  const handleEdit = (project) => {
-    if (hasPermission(PERMISSIONS.UPDATE_PROJECT)) {
-      setEditingProject(project);
-      setIsFormOpen(true);
-    } else {
-      alert('You do not have permission to update projects.');
+  const handleEditProject = (project) => {
+    if (!hasPermission(ADMIN_PERMISSIONS.UPDATE_PROJECT)) {
+      alert("You don't have permission to edit projects.");
+      return;
     }
+    setEditingProject(project);
+    setIsFormOpen(true);
   };
 
-  const handleDelete = async (id, imageUrl) => {
-    if (!hasPermission(PERMISSIONS.DELETE_PROJECT)) {
-      alert('You do not have permission to delete projects.');
+  const handleDeleteProject = async (id, imageUrl) => {
+    if (!hasPermission(ADMIN_PERMISSIONS.DELETE_PROJECT)) {
+      alert("You don't have permission to delete projects.");
       return;
     }
     
-    if (window.confirm('Are you sure you want to delete this project? This cannot be undone.')) {
+    if (window.confirm("Are you sure you want to delete this project? This action cannot be undone.")) {
       try {
         await projectService.deleteProject(id, imageUrl);
-        fetchProjects(); // Refresh list
+        setProjects(projects.filter(p => p.id !== id));
       } catch (error) {
-        console.error("Failed to delete", error);
-        alert(`Failed to delete project: ${error.message || 'Unknown error'}`);
-      }
-    }
-  };
-
-  const toggleProjectSelection = (projectId) => {
-    setSelectedProjects(prevSelected =>
-      prevSelected.includes(projectId)
-        ? prevSelected.filter(id => id !== projectId)
-        : [...prevSelected, projectId]
-    );
-  };
-
-  const handleGroupDelete = async () => {
-    if (!hasPermission(PERMISSIONS.DELETE_PROJECT)) {
-      alert('You do not have permission to delete projects.');
-      return;
-    }
-    
-    if (window.confirm(`Are you sure you want to delete ${selectedProjects.length} selected projects? This cannot be undone.`)) {
-      setLoading(true);
-      try {
-        for (const projectId of selectedProjects) {
-          const projectToDelete = projects.find(p => p.id === projectId);
-          if (projectToDelete) {
-            await projectService.deleteProject(projectId, projectToDelete.imageUrl);
-          }
-        }
-        setSelectedProjects([]);
-        fetchProjects();
-      } catch (error) {
-        console.error("Failed to delete selected projects", error);
-        alert('Failed to delete selected projects. Check console for details.');
-      } finally {
-        setLoading(false);
+        FirebaseErrorHandler.handle(error, 'deleting project');
       }
     }
   };
@@ -154,141 +111,175 @@ export default function Dashboard() {
       if (editingProject) {
         await projectService.updateProject(editingProject.id, formData, imageFile, editingProject.imageUrl);
       } else {
-        await projectService.addProject(formData, imageFile);
+        await projectService.createProject(formData, imageFile);
       }
       setIsFormOpen(false);
-      fetchProjects(); // Refresh list
+      fetchProjects();
     } catch (error) {
-      console.error("Submission failed", error);
-      alert('Failed to save project. Ensure your image is not too large.');
+      FirebaseErrorHandler.handle(error, 'saving project');
     }
   };
 
-  const filteredProjects = activeCategory === 'All' 
-    ? projects 
-    : projects.filter(p => p.category === activeCategory);
+  const filteredProjects = useMemo(() => {
+    return projects.filter(p => 
+      p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.client.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.category.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [projects, searchQuery]);
 
-  const headerAnim = fadeUp(0.1, 0.8, 30);
+  const stats = useMemo(() => ({
+    total: projects.length,
+    favorites: projects.filter(p => p.isFavorite).length,
+    recent: projects.filter(p => {
+      const date = p.createdAt?.toDate ? p.createdAt.toDate() : new Date(p.createdAt);
+      return new Date() - date < 7 * 24 * 60 * 60 * 1000;
+    }).length
+  }), [projects]);
 
   return (
-    <motion.main className="admin-dashboard-page" {...pageTransition}>
-      <div className="container">
-        
-        <motion.div 
-          className="dashboard-header"
-          initial={headerAnim.initial}
-          animate={headerAnim.animate}
-          transition={headerAnim.transition}
-        >
-          <div className="dashboard-header__content">
-            <h1>CMS Dashboard</h1>
-            <p>Manage your portfolio projects, categories, and home page showcases.</p>
-          </div>
-          
-          <div className="dashboard-header__actions">
-            {selectedProjects.length > 0 && (
-              <MagneticButton>
-                <button className="btn-delete-selected" onClick={handleGroupDelete} disabled={loading}>
-                  Delete Selected ({selectedProjects.length})
-                </button>
-              </MagneticButton>
-            )}
-            <MagneticButton>
-              <button className="btn-add" onClick={handleAddNew}>
-                + Add Project
-              </button>
-            </MagneticButton>
+    <motion.main className="admin-dashboard container" {...pageTransition}>
+      <header className="dashboard-header">
+        <div className="header-left">
+          <h1>Work CMS</h1>
+          <p>Logged in as {auth.currentUser?.email}</p>
+        </div>
+        <div className="header-right">
+          <MagneticButton>
+            <button className="button logout-btn" onClick={handleLogout}>Logout</button>
+          </MagneticButton>
+          <MagneticButton>
+            <button className="button button--primary add-btn" onClick={handleAddProject}>+ New Project</button>
+          </MagneticButton>
+        </div>
+      </header>
 
-            <MagneticButton>
-              <button className="btn-logout" onClick={handleLogout}>
-                Sign Out
-              </button>
-            </MagneticButton>
-          </div>
-        </motion.div>
+      {/* Quick Stats */}
+      <section className="dashboard-stats">
+        {[
+          { label: 'Total Projects', value: stats.total, icon: '📂' },
+          { label: 'Showcase Items', value: stats.favorites, icon: '⭐️' },
+          { label: 'Active Category', value: 'Creative', icon: '🎨' }
+        ].map((s, i) => {
+          const anim = fadeUp(0.1 + i * 0.1, 0.6, 20);
+          return (
+            <motion.div key={s.label} className="stat-card glass" {...anim}>
+              <span className="stat-icon">{s.icon}</span>
+              <div className="stat-info">
+                <span className="stat-label">{s.label}</span>
+                <span className="stat-value">{s.value}</span>
+              </div>
+            </motion.div>
+          );
+        })}
+      </section>
 
-        <div className="dashboard-tabs">
-          {CATEGORIES.map(cat => (
-            <button
-              key={cat}
-              className={`dashboard-tab ${activeCategory === cat ? 'active' : ''}`}
-              onClick={() => setActiveCategory(cat)}
-            >
-              {cat}
-            </button>
-          ))}
+      {/* Projects List */}
+      <section className="dashboard-projects">
+        <div className="projects-controls">
+          <div className="search-bar glass">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input 
+              type="text" 
+              placeholder="Search projects by title, client, or category..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
         </div>
 
-        <div className="dashboard-content">
+        <div className="projects-table-wrapper glass">
           {loading ? (
-            <div className="dashboard-loading">Loading your portfolio...</div>
+            <div className="loader-container">
+              <div className="minimal-loader"></div>
+              <p>Fetching projects from Firestore...</p>
+            </div>
           ) : filteredProjects.length === 0 ? (
-            <div className="dashboard-empty">
-              <p>No projects found in this category.</p>
-              <button onClick={handleAddNew} className="btn-outline mt-4">Add your first project</button>
+            <div className="empty-state">
+              <p>No projects found. Click "New Project" to get started.</p>
             </div>
           ) : (
-            <div className="project-grid">
-              <AnimatePresence>
-                {filteredProjects.map((project) => (
-                  <motion.div 
-                    key={project.id}
-                    className="admin-project-card glass"
-                    layout
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <div className="card-image" style={{ backgroundColor: project.color }}>
-                      {project.imageUrl && <img src={project.imageUrl} alt={project.title} />}
-                      <input 
-                        type="checkbox" 
-                        className="project-select-checkbox"
-                        checked={selectedProjects.includes(project.id)}
-                        onChange={() => toggleProjectSelection(project.id)}
-                      />
-                      <div className="card-actions">
-                        <button onClick={() => handleEdit(project)} className="btn-icon edit">Edit</button>
-                        <button onClick={() => handleDelete(project.id, project.imageUrl)} className="btn-icon delete">Delete</button>
-                      </div>
-                      
-                      {project.isFavorite && (
-                        <div className="favorite-badge">
-                          ★ Slot {project.showcaseSlot}
+            <table className="projects-table">
+              <thead>
+                <tr>
+                  <th>Project</th>
+                  <th>Category</th>
+                  <th>Showcase</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <AnimatePresence mode="popLayout">
+                  {filteredProjects.map((project, i) => (
+                    <motion.tr 
+                      key={project.id}
+                      layout
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ delay: i * 0.05 }}
+                    >
+                      <td>
+                        <div className="project-cell">
+                          <div 
+                            className="project-thumb" 
+                            style={{ backgroundColor: project.color || '#1a1a1a' }}
+                          >
+                            {project.imageUrl && <img src={project.imageUrl} alt="" />}
+                          </div>
+                          <div className="project-names">
+                            <span className="project-title-cell">{project.title}</span>
+                            <span className="project-client-cell">{project.client}</span>
+                          </div>
                         </div>
-                      )}
-                    </div>
-                    
-                    <div className="card-info">
-                      <div className="card-meta">
-                        <span className="card-category">{project.category}</span>
-                        <span className="card-year">{project.year}</span>
-                      </div>
-                      <h3>{project.title}</h3>
-                      {project.projectUrl && (
-                        <a href={project.projectUrl} target="_blank" rel="noreferrer" className="card-link">
-                          View Link ↗
-                        </a>
-                      )}
-                    </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
+                      </td>
+                      <td>
+                        <span className="category-badge">{project.category}</span>
+                      </td>
+                      <td>
+                        {project.isFavorite ? (
+                          <span className="showcase-badge">
+                            Slot {project.showcaseSlot}
+                          </span>
+                        ) : (
+                          <span className="no-showcase">—</span>
+                        )}
+                      </td>
+                      <td className="actions-cell">
+                        <button className="action-btn" onClick={() => handleEditProject(project)} title="Edit">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                          </svg>
+                        </button>
+                        <button className="action-btn delete" onClick={() => handleDeleteProject(project.id, project.imageUrl)} title="Delete">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                          </svg>
+                        </button>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </AnimatePresence>
+              </tbody>
+            </table>
           )}
         </div>
+      </section>
 
-      </div>
-
+      {/* Project Form Modal */}
       <AnimatePresence>
         {isFormOpen && (
           <ProjectForm 
-            initialData={editingProject} 
-            onSubmit={handleFormSubmit} 
-            onClose={() => setIsFormOpen(false)} 
+            initialData={editingProject}
+            onClose={() => setIsFormOpen(false)}
+            onSubmit={handleFormSubmit}
             hasPermission={hasPermission}
-            permissions={PERMISSIONS}
+            permissions={ADMIN_PERMISSIONS}
           />
         )}
       </AnimatePresence>

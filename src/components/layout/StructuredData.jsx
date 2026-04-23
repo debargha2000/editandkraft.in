@@ -5,7 +5,6 @@
 // All schemas are dynamically generated from content.js data.
 // When services, portfolio, or company info change → schemas adapt.
 // ============================================================
-
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 import { getAllSchemasForRoute } from "../../data/seo";

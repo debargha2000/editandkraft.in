@@ -48,7 +48,7 @@ export default function Hero() {
           {...fadeUp(1.2, 0.8, 30)}
         >
           <MagneticButton>
-            <Link to={HERO.cta.path} className="hero__cta-btn" aria-label={`View our work - ${HERO.cta.label}`}>
+            <Link to={HERO.cta.path} className="hero__cta-btn button button--primary" aria-label={`View our work - ${HERO.cta.label}`}>
               <span>{HERO.cta.label}</span>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                 <path d="M7 17L17 7M17 7H7M17 7V17" />

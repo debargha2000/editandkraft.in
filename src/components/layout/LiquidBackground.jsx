@@ -66,6 +66,7 @@ class Blob {
     grad.addColorStop(0, `rgba(${r},${g},${b}, 1)`);
     grad.addColorStop(0.4, `rgba(${r},${g},${b}, 0.6)`);
     grad.addColorStop(1, `rgba(${r},${g},${b}, 0)`);
+
     ctx.fillStyle = grad;
     ctx.fillRect(this.x - this.r, this.y - this.r, this.r * 2, this.r * 2);
   }
@@ -77,6 +78,7 @@ export default function LiquidBackground() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
     const ctx = canvas.getContext('2d');
     let animationFrameId;
     let W, H;
@@ -88,7 +90,7 @@ export default function LiquidBackground() {
       H = window.innerHeight;
       canvas.width = W * dpr;
       canvas.height = H * dpr;
-
+      
       // Inline styles for blurring directly on the canvas node
       canvas.style.width = W + 'px';
       canvas.style.height = H + 'px';
@@ -122,14 +124,13 @@ export default function LiquidBackground() {
       const dt = Math.min((ts - last) / 1000, 0.1);
       last = ts;
 
-      // dark base fill
+      // pure black base fill
       ctx.globalCompositeOperation = 'source-over';
-      ctx.fillStyle = '#0a001a';
+      ctx.fillStyle = '#000000';
       ctx.fillRect(0, 0, W, H);
 
       // additive blend
       ctx.globalCompositeOperation = 'screen';
-
       for (const blob of blobs) {
         blob.update(dt, W, H);
         blob.draw(ctx);
@@ -159,6 +160,7 @@ export default function LiquidBackground() {
         display: 'block',
         width: '100vw',
         height: '100vh',
+        backgroundColor: '#000',
       }}
       aria-hidden="true"
     />

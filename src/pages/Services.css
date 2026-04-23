@@ -206,7 +206,6 @@
     grid-template-columns: 1fr;
     gap: var(--space-lg);
   }
-
   .plan-card:last-child {
     grid-column: span 1;
   }
@@ -232,6 +231,7 @@
   gap: 0.5rem;
   margin-bottom: 1rem;
 }
+
 .option-button {
   padding: 0.6rem 1.4rem;
   border-radius: 100px;

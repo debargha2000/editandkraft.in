@@ -80,13 +80,17 @@ export default function CustomCursor() {
     const animateRing = () => {
       const dx = pos.current.x - ringPos.current.x;
       const dy = pos.current.y - ringPos.current.y;
+
       ringPos.current.x += dx * 0.12;
       ringPos.current.y += dy * 0.12;
+
       if (ringRef.current) {
         ringRef.current.style.transform = `translate(${ringPos.current.x}px, ${ringPos.current.y}px)`;
       }
+
       raf = requestAnimationFrame(animateRing);
     };
+
     raf = requestAnimationFrame(animateRing);
 
     return () => {

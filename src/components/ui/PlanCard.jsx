@@ -5,7 +5,6 @@ import { scaleUp } from '../../utils/animations';
 
 export default function PlanCard({ plan, index, isInView }) {
   const [selectedOption, setSelectedOption] = useState(plan.purchaseOptions ? plan.purchaseOptions[0] : null);
-
   const cardAnim = scaleUp(index * 0.15, 0.7);
 
   return (
@@ -22,6 +21,7 @@ export default function PlanCard({ plan, index, isInView }) {
       <div className="plan-header">
         <h2 className="plan-name">{plan.name}</h2>
         <p className="plan-description">{plan.description}</p>
+        
         {plan.purchaseOptions ? (
           <div className="plan-options">
             <div className="option-buttons">
@@ -47,7 +47,7 @@ export default function PlanCard({ plan, index, isInView }) {
           </div>
         )}
       </div>
-
+      
       <div className="plan-body">
         <ul className="plan-features">
           {plan.features.map((feature, idx) => (
@@ -60,13 +60,13 @@ export default function PlanCard({ plan, index, isInView }) {
           ))}
         </ul>
       </div>
-
+      
       <div className="plan-footer">
         <MagneticButton>
           <a
             href={selectedOption ? selectedOption.ctaLink : plan.ctaLink}
-            target={selectedOption ? selectedOption.isExternal ? "_blank" : "_self" : plan.isExternal ? "_blank" : "_self"}
-            rel={selectedOption ? selectedOption.isExternal ? "noopener noreferrer" : "" : plan.isExternal ? "noopener noreferrer" : ""}
+            target={selectedOption ? (selectedOption.isExternal ? "_blank" : "_self") : (plan.isExternal ? "_blank" : "_self")}
+            rel={selectedOption ? (selectedOption.isExternal ? "noopener noreferrer" : "") : (plan.isExternal ? "noopener noreferrer" : "")}
             className={`plan-cta ${plan.popular ? 'plan-cta--primary' : 'plan-cta--secondary'}`}
           >
             {selectedOption ? selectedOption.ctaText : plan.ctaText}

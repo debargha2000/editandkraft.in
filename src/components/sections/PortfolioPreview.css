@@ -11,24 +11,7 @@
 }
 
 .portfolio-preview__cta-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-family: var(--font-accent);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  padding: 1.2rem 2.5rem;
-  border: 1.5px solid rgba(255, 255, 255, 0.6);
-  color: #FFFFFF;
-  transition: background 0.4s var(--ease-out-expo),
-              color 0.4s var(--ease-out-expo);
-}
-
-.portfolio-preview__cta-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: #FFFFFF;
+  /* Using global button styles */
 }
 
 /* Portfolio Card */
@@ -42,6 +25,12 @@
 .portfolio-card:hover {
   transform: translateY(-10px) scale(1.02);
   background: var(--glass-bg-hover);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.portfolio-card:active {
+  transform: translateY(-5px) scale(0.98);
+  transition: all 0.2s ease;
 }
 
 .portfolio-card--large {
@@ -76,11 +65,9 @@
   .portfolio-preview__grid {
     grid-template-columns: 1fr;
   }
-
   .portfolio-card--large {
     grid-column: span 1;
   }
-
   .portfolio-card--large .portfolio-card__image-wrapper {
     aspect-ratio: 16 / 10;
   }

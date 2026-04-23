@@ -4,10 +4,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(10px);
-  z-index: 1000;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(15px);
+  z-index: var(--z-modal);
   display: flex;
+
   align-items: center;
   justify-content: center;
   padding: 2rem;

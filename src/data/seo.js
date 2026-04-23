@@ -4,7 +4,6 @@
 // This file derives ALL SEO metadata from content.js.
 // When content changes, SEO updates automatically.
 // ============================================================
-
 import { SITE, SERVICES, PORTFOLIO, ABOUT, FOOTER } from "./content";
 
 // ---------------------------------------------------------------------------
@@ -114,16 +113,15 @@ const ROUTE_SEO = {
  */
 export function getSEOForRoute(pathname = "/", overrides = {}) {
   const routeConfig = ROUTE_SEO[pathname] || ROUTE_SEO["/"];
-
   return {
     title: routeConfig.title,
     description: routeConfig.description,
     keywords: routeConfig.keywords,
-    canonicalUrl: `${CANONICAL_BASE}${pathname === "/" ? "" : pathname}`,
+    canonicalUrl: `${CANONICAL_BASE}/#${pathname === "/" ? "" : pathname}`,
     ogTitle: routeConfig.title,
     ogDescription: routeConfig.description,
     ogType: routeConfig.ogType,
-    ogUrl: `${CANONICAL_BASE}${pathname === "/" ? "" : pathname}`,
+    ogUrl: `${CANONICAL_BASE}/#${pathname === "/" ? "" : pathname}`,
     ogSiteName: SITE.name,
     ogImage: `${CANONICAL_BASE}/og-image.jpg`,
     twitterCard: "summary_large_image",
@@ -216,10 +214,10 @@ export function getBreadcrumbSchema(pathname = "/") {
     const pageName = routeConfig
       ? routeConfig.title.split(" — ")[0]
       : pathname.replace("/", "").charAt(0).toUpperCase() + pathname.slice(2);
-
+    
     breadcrumbs.push({
       name: pageName,
-      url: `${SITE.website}${pathname}`,
+      url: `${SITE.website}/#${pathname}`,
     });
   }
 

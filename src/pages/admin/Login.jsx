@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+// ⚠️ THESE TWO IMPORTS MUST BE ADDED:
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { pageTransition, fadeUp } from '../../utils/animations';
@@ -9,6 +10,9 @@ import './Login.css';
 
 const ALLOWED_EMAILS = ["debarghapakhira@gmail.com", "deys87714@gmail.com"];
 
+// ⚠️ Add these for Google Provider configuration:
+let googleAuthProvider = null; // Initialize outside component to avoid re-creation
+
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -16,10 +20,24 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Check if auth is initialized in firebase.js
+  useEffect(() => {
+    const initializeGoogleProvider = async () => {
+      if (!auth) {
+        console.warn('Firebase authentication not configured');
+        return;
+      }
+      
+      googleAuthProvider = new GoogleAuthProvider();
+    };
+    
+    initializeGoogleProvider();
+  }, []);
+
   const checkAndRedirect = async (user) => {
     if (!ALLOWED_EMAILS.includes(user.email)) {
       await auth.signOut();
-      navigate('/'); // Redirect to home page
+      navigate('/');
       return false;
     }
     return true;
@@ -41,7 +59,7 @@ export default function Login() {
       if (await checkAndRedirect(userCredential.user)) {
         navigate('/admin/dashboard');
       }
-    } catch {
+    } catch (err) {
       setError('Invalid email or password. Please try again.');
       setLoading(false);
     }
@@ -57,17 +75,26 @@ export default function Login() {
       return;
     }
     
-    const provider = new GoogleAuthProvider();
-    
     try {
-      const userCredential = await signInWithPopup(auth, provider);
+      // Initialize Google provider if it hasn't been yet
+      if (!googleAuthProvider) {
+        googleAuthProvider = new GoogleAuthProvider();
+      }
+      
+      const userCredential = await signInWithPopup(auth, googleAuthProvider);
+      
       if (await checkAndRedirect(userCredential.user)) {
         navigate('/admin/dashboard');
       }
     } catch (err) {
+      console.error('Google Sign-In Error:', err);
+      
       if (err.code !== 'auth/popup-closed-by-user') {
-        setError('Google sign-in failed. Please try again.');
+        setError(`Google sign-in failed. Please try again. (${err.message})`);
+      } else {
+        setError('Login popup was closed. Please try again.');
       }
+    } finally {
       setLoading(false);
     }
   };
@@ -87,12 +114,14 @@ export default function Login() {
             <h2>Admin Portal</h2>
             <p>Welcome back. Please sign in to manage your portfolio.</p>
           </div>
-
-          {error && <div className="login-error">{error}</div>}
+          
+          {error && (
+            <div className="login-error">{error}</div>
+          )}
 
           <button 
             type="button" 
-            className="google-btn" 
+            className="button google-btn" 
             onClick={handleGoogleLogin}
             disabled={loading}
           >
@@ -123,7 +152,7 @@ export default function Login() {
                 placeholder="hello@editandkraft.in"
               />
             </div>
-            
+
             <div className="login-field">
               <label htmlFor="password">Password</label>
               <input
@@ -140,7 +169,7 @@ export default function Login() {
             <MagneticButton>
               <button 
                 type="submit" 
-                className="login-submit"
+                className="button button--primary login-submit"
                 disabled={loading}
               >
                 {loading ? 'Authenticating...' : 'Sign In to Dashboard'}

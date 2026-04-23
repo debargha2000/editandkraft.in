@@ -53,11 +53,11 @@ function AnimatedCounter({ value, isInView, duration = 2000 }) {
     const animate = (currentTime) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-
+      
       // Ease out expo
       const eased = 1 - Math.pow(1 - progress, 4);
       const current = Math.round(eased * value);
-
+      
       setCount(current);
 
       if (progress < 1) {

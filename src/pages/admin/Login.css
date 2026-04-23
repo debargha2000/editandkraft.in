@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 100px 20px 60px;
+  padding: 60px 20px;
   background-color: var(--color-bg);
   position: relative;
   overflow: hidden;
@@ -28,10 +28,10 @@
   width: 100%;
   max-width: 480px;
   padding: 3rem;
-  border-radius: 20px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-  background: rgba(var(--color-bg-rgb), 0.6);
-  border: 1px solid rgba(var(--color-text-rgb), 0.1);
+  border-radius: 2.5rem;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(20px);
 }
 
@@ -64,26 +64,9 @@
 }
 
 .google-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  width: 100%;
-  padding: 14px;
-  background-color: white;
-  color: #333;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  /* Using global .button classes */
   margin-bottom: 1.5rem;
-}
-
-.google-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
 .google-btn:disabled {
@@ -137,19 +120,20 @@
 }
 
 .login-field input {
-  padding: 1rem;
-  background: rgba(var(--color-bg-rgb), 0.4);
-  border: 1px solid rgba(var(--color-text-rgb), 0.2);
-  border-radius: 8px;
-  color: var(--color-text);
+  padding: 1.2rem 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  color: #ffffff;
   font-size: 1rem;
-  transition: all 0.3s ease;
+  transition: all 0.4s var(--ease-out-expo);
 }
 
 .login-field input:focus {
   outline: none;
-  border-color: var(--color-text);
-  background: rgba(var(--color-bg-rgb), 0.8);
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 0 1px #ffffff;
 }
 
 .login-field input:disabled {
@@ -159,20 +143,7 @@
 
 .login-submit {
   width: 100%;
-  padding: 1rem;
-  background-color: var(--color-text);
-  color: var(--color-bg);
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
   margin-top: 1rem;
-  transition: transform 0.3s ease;
-}
-
-.login-submit:hover:not(:disabled) {
-  transform: translateY(-2px);
 }
 
 .login-submit:disabled {

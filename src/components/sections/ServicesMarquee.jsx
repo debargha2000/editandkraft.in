@@ -6,7 +6,7 @@ import './ServicesMarquee.css';
 
 const ServiceCard = ({ service }) => {
   return (
-    <div className="services-marquee__card">
+    <div className="services-marquee__card glass glass-shine">
       <div className="services-marquee__content">
         <h3 className="services-marquee__card-title">{service.title}</h3>
         <p className="services-marquee__card-desc">{service.description}</p>
@@ -21,7 +21,6 @@ export default function ServicesMarquee() {
 
   // Duplicate for seamless loop
   const duplicated = [...SERVICES.items, ...SERVICES.items];
-
   const marqueeAnim = fadeIn(0.3, 1);
 
   return (

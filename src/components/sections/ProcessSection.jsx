@@ -23,7 +23,7 @@ export default function ProcessSection() {
             return (
               <motion.div
                 key={step.number}
-                className="process__step glass"
+                className="process__step glass glass-shine"
                 initial={anim.initial}
                 animate={isInView ? anim.animate : {}}
                 transition={anim.transition}

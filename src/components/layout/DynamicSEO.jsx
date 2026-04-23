@@ -5,7 +5,6 @@
 // route. Reads from seo.js which derives everything from content.js.
 // When content changes → SEO adapts automatically.
 // ============================================================
-
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 import { getSEOForRoute } from "../../data/seo";

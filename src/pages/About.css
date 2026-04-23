@@ -123,12 +123,10 @@
   .about-hero__title {
     font-size: var(--text-4xl);
   }
-
   .about-philosophy__inner {
     grid-template-columns: 1fr;
     gap: var(--space-md);
   }
-
   .about-timeline__item {
     grid-template-columns: 60px 12px 1fr;
   }

@@ -14,6 +14,7 @@ export default function useLenis() {
       lenis.raf(time);
       requestAnimationFrame(raf);
     }
+
     requestAnimationFrame(raf);
 
     return () => {

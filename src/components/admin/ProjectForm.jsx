@@ -189,7 +189,7 @@ export default function ProjectForm({ initialData = null, onSubmit, onClose, has
             />
           </div>
 
-          <div className="form-row">
+          <div className="form-row" style={{ alignItems: 'flex-end' }}>
             <div className="form-group flex-1">
               <label>Brand Color (Card Background)</label>
               <div className="color-picker-wrapper">
@@ -204,7 +204,7 @@ export default function ProjectForm({ initialData = null, onSubmit, onClose, has
             </div>
             
             <div className="form-group flex-2">
-              <label>Thumbnail Media (Image/Video Placeholder)</label>
+              <label>Thumbnail Media (Image)</label>
               <div className="file-upload">
                 <label className="file-upload-label">
                   <input type="file" accept="image/*" onChange={handleImageChange} />
@@ -263,7 +263,7 @@ export default function ProjectForm({ initialData = null, onSubmit, onClose, has
                       onChange={handleChange} 
                       placeholder="e.g. Creator Empire — Reel" 
                     />
-                    <p className="help-text">This label forms the typography overlay strictly on the home page layout. It won't alter the description on the actual portfolio page.</p>
+                    <p className="help-text">This label forms the typography overlay strictly on the home page layout.</p>
                   </div>
                 </motion.div>
               )}

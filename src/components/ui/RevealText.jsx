@@ -6,6 +6,7 @@ import { EASE_EXPO } from '../../utils/animations';
 export function RevealLines({ text, className = '', delay = 0, stagger = 0.08 }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, margin: '-80px' });
+  
   const lines = Array.isArray(text) ? text : [text];
 
   return (

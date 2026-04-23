@@ -5,14 +5,13 @@
 // To update any text, service, project, or info on the website,
 // simply edit the values below. No code knowledge required.
 // ============================================================
-
 export const SITE = {
   name: "Edit & Kraft",
   tagline: "Elevate Your Brand With Timeless Marketing Solutions",
   description:
     "Premium digital marketing & creative agency specializing in scroll-stopping visual experiences that transform brands across India.",
   email: "teams@editandkraft.in",
-  phone: "+91 83368 76464",
+  phone: "+91 98765 43210",
   website: "https://editandkraft.in",
   location: "India",
   copyright: `© ${new Date().getFullYear()} Edit & Kraft. All rights reserved.`,
@@ -323,7 +322,6 @@ export const ABOUT = {
     "What started as one artist's passion for visual storytelling has grown into a trusted creative force behind some of India's most recognized brands.",
   story: [
     "Edit & Kraft was born from a simple belief — that every brand deserves visuals that don't just communicate, but captivate. Founded by a digital artist with a decade of experience and an obsessive eye for detail, we've spent years perfecting the art of scroll-stopping creative.",
-
     "Today, we partner with brands across India — from ambitious startups to established industry leaders — delivering creative that doesn't just meet the brief, but redefines it.",
   ],
   philosophy: {
@@ -340,7 +338,6 @@ export const ABOUT = {
       year: "2020",
       event: "Crossed 100+ projects, partnered with first major national brand",
     },
-
     {
       year: "2024",
       event:

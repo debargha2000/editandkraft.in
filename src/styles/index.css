@@ -8,13 +8,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=Marcellus&display=swap');
 
 /* ---- CSS Reset ---- */
+/* *,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  cursor: none !important;
+} */
+
 *,
 *::before,
 *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  cursor: none !important; /* Globally disable default cursor */
+}
+
+body.cursor-enabled {
+  cursor: none !important;
 }
 
 html {
@@ -56,7 +68,7 @@ button:not(.btn-magic),
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  padding: 0.8rem 1.6rem;
+  padding: 0.8rem 1.8rem;
   border-radius: 100px;
   cursor: pointer;
   transition: all 0.5s var(--ease-out-expo);
@@ -66,46 +78,66 @@ button:not(.btn-magic),
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
+  
+  /* Liquid Glass Base for ALL buttons */
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px) saturate(1.5);
+  -webkit-backdrop-filter: blur(12px) saturate(1.5);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.2);
   color: var(--color-text-secondary);
-  backdrop-filter: blur(0px);
+  
+  isolation: isolate;
   will-change: transform, backdrop-filter;
 }
 
-.button--primary {
-  background: var(--color-white) !important;
-  color: #000 !important;
-  border-color: var(--color-white) !important;
-  font-weight: 600;
-}
-
-.button--secondary {
-  background: transparent !important;
-  border-color: var(--color-white) !important;
-  color: var(--color-white) !important;
-}
-
-.button--glass {
-  background: rgba(255, 255, 255, 0.05) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
+button:not(.btn-magic)::before,
+.button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent);
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.6;
 }
 
 button:not(.btn-magic):hover,
 .button:hover {
-  color: #fff !important;
-  background: rgba(255, 255, 255, 0.1) !important;
-  border-color: rgba(255, 255, 255, 0.3) !important;
-  backdrop-filter: blur(5px) !important;
-  -webkit-backdrop-filter: blur(5px) !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  backdrop-filter: blur(16px) saturate(2) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(2) !important;
   transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+  color: #ffffff !important;
+}
+
+button:not(.btn-magic):active,
+.button:active {
+  transform: translateY(0) scale(0.96);
+  background: rgba(255, 255, 255, 0.25) !important;
+  transition: all 0.1s ease;
+}
+
+.button--primary {
+  background: rgba(255, 255, 255, 1) !important;
+  color: #000000 !important;
+  border-color: #ffffff !important;
+  backdrop-filter: blur(4px) !important;
+  font-weight: 600;
 }
 
 .button--primary:hover {
-  background: #fff !important;
-  color: #000 !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(255, 255, 255, 0.2);
+}
+
+.button--primary:active {
+  transform: translateY(0) scale(0.98);
   opacity: 0.9;
-  transform: translateY(-3px);
 }
 
 input, textarea, select {
@@ -130,13 +162,15 @@ input, textarea, select {
   --color-white: #FFFFFF;
   
   /* True Liquid Glass Tokens (The Apple Aesthetic) */
-  --glass-bg: rgba(255, 255, 255, 0.1);
-  --glass-bg-hover: rgba(255, 255, 255, 0.15);
-  --glass-border: rgba(255, 255, 255, 0.2);
-  --glass-blur: 20px;
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-bg-hover: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-blur: 32px;
   --glass-brightness: 1.1;
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
-  --glass-inner-light: inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  --glass-saturate: 1.8;
+  --glass-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.5);
+  --glass-inner-light: inset 0 1px 1.5px rgba(255, 255, 255, 0.4);
+  --glass-specular: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 40%, transparent 100%);
 
   /* Typography — Font Families */
   --font-display: 'Syne', sans-serif;
@@ -183,10 +217,10 @@ input, textarea, select {
   --duration-slower: 1.4s;
 
   /* Z-index */
-  --z-cursor: 9999;
+  --z-cursor: 10000;
+  --z-modal: 9999;
+  --z-overlay: 9900;
   --z-nav: 1000;
-  --z-overlay: 900;
-  --z-modal: 800;
 }
 
 /* ---- Utility Classes ---- */
@@ -219,34 +253,57 @@ h1, h2, h3, h4, h5, h6, p, a, span, li, button, input, textarea {
 /* ---- Liquid Glass Utilities ---- */
 .glass {
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(1.05);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(1.05);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow), var(--glass-inner-light);
   position: relative;
   overflow: hidden;
+  isolation: isolate;
 }
 
 .glass::before {
   content: '';
   position: absolute;
+  inset: 0;
+  background: var(--glass-specular);
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.8;
+  transition: opacity 0.5s var(--ease-out-expo);
+}
+
+.glass-shine::after {
+  content: '';
+  position: absolute;
   top: 0;
-  left: -100%;
-  width: 50%;
+  left: -150%;
+  width: 100%;
   height: 100%;
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.1),
     transparent
   );
   transform: skewX(-25deg);
-  transition: 0.75s;
+  transition: 1.2s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
 }
 
-.glass:hover::before {
+.glass:hover.glass-shine::after {
   left: 150%;
+}
+
+.glass:hover {
+  background: var(--glass-bg-hover);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 24px 64px -12px rgba(0, 0, 0, 0.6), var(--glass-inner-light);
+}
+
+.glass:active {
+  transform: scale(0.99);
+  transition: transform 0.15s var(--ease-out-expo);
 }
 
 .glass-dark {
@@ -255,7 +312,6 @@ h1, h2, h3, h4, h5, h6, p, a, span, li, button, input, textarea {
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
-
 
 /* ---- Typography Utilities ---- */
 .font-display {
@@ -286,7 +342,7 @@ h1, h2, h3, h4, h5, h6, p, a, span, li, button, input, textarea {
     /* Scale down massive typography for small viewports */
     --text-hero: clamp(2.5rem, 10vw, 3.5rem);
     --text-7xl: clamp(2.2rem, 8vw, 3rem);
-    --text-6xl: clamp(2rem, 7vw, 2.8rem);
+    --text-6xl: clamp(2.2rem, 7vw, 2.8rem);
     --text-5xl: clamp(1.8rem, 6vw, 2.5rem);
   }
 }

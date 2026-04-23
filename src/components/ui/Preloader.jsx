@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './Preloader.css';
 
-export default function Preloader({ onComplete }) {
+export default function Preloader({ onComplete = () => {} }) {
   const [progress, setProgress] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
 

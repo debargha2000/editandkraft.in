@@ -72,7 +72,7 @@ export default function PortfolioPreview() {
           transition={ctaAnim.transition}
         >
           <MagneticButton>
-            <Link to="/work" className="portfolio-preview__cta-btn" aria-label="View all portfolio projects">
+            <Link to="/work" className="portfolio-preview__cta-btn button button--primary" aria-label="View all portfolio projects">
               View All Work
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                 <path d="M5 12h14M12 5l7 7-7 7" />
@@ -91,6 +91,7 @@ function PortfolioCard({ project, index, isInView }) {
     target: cardRef,
     offset: ['start end', 'end start'],
   });
+
   const imageY = useTransform(scrollYProgress, [0, 1], [-30, 30]);
 
   // Make every 3rd card large, just like the original design
@@ -106,7 +107,7 @@ function PortfolioCard({ project, index, isInView }) {
   return (
     <motion.div
       ref={cardRef}
-      className={`portfolio-card glass ${isLarge ? 'portfolio-card--large' : ''}`}
+      className={`portfolio-card glass glass-shine ${isLarge ? 'portfolio-card--large' : ''}`}
       initial={anim.initial}
       animate={isInView ? anim.animate : {}}
       transition={anim.transition}

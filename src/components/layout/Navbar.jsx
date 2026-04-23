@@ -19,6 +19,7 @@ export default function Navbar() {
       setIsHidden(currentY > lastScrollY.current && currentY > 200);
       lastScrollY.current = currentY;
     };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
