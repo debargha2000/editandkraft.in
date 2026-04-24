@@ -70,7 +70,7 @@ export default function Navbar() {
       >
         <div className="navbar__inner">
           <Link to="/" className="navbar__logo" aria-label="Edit & Kraft Home">
-            <span className="navbar__logo-text navbar--shimmer">{SITE.name}</span>
+            <span className="navbar__logo-text" style={{ color: 'white' }}>{SITE.name}</span>
           </Link>
 
           <div className="navbar__links">
@@ -78,7 +78,7 @@ export default function Navbar() {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`navbar__link navbar--shimmer ${location.pathname === link.path ? 'navbar__link--active' : ''}`}
+                className={`navbar__link ${location.pathname === link.path ? 'navbar__link--active' : ''}`}
               >
                 <span className="navbar__link-text">{link.label}</span>
               </Link>

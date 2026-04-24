@@ -72,14 +72,7 @@
   letter-spacing: -0.02em;
 }
 
-.navbar--shimmer {
-  background: linear-gradient(90deg, #ffd700, #fff8dc, #ffd700);
-  background-size: 200% auto;
-  color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
-  animation: shimmer 3s linear infinite;
-}
+
 
 .navbar__links {
   display: flex;
@@ -256,11 +249,4 @@ body.menu-open {
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
+
