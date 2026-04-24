@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useMemo } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { TESTIMONIALS } from '../../data/content';
 import { fadeUp, fadeIn } from '../../utils/animations';
@@ -9,7 +9,7 @@ export default function TestimonialsMarquee() {
   const isInView = useInView(ref, { once: false, margin: '-100px' });
 
   // Duplicate testimonials for seamless loop
-  const duplicated = [...TESTIMONIALS, ...TESTIMONIALS];
+  const duplicated = useMemo(() => [...TESTIMONIALS, ...TESTIMONIALS], [TESTIMONIALS]);
   const labelAnim = fadeUp(0, 0.8, 30);
   const marqueeAnim = fadeIn(0.3, 1);
 

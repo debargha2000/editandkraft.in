@@ -123,10 +123,11 @@ export default function ProjectForm({ initialData = null, onSubmit, onClose, has
         <form onSubmit={handleSubmit} className="project-form">
           <div className="form-row">
             <div className="form-group flex-2">
-              <label>Project Title</label>
+              <label htmlFor="title">Project Title</label>
               <input 
                 type="text" 
                 name="title" 
+                id="title"
                 required 
                 value={formData.title} 
                 onChange={handleChange} 
@@ -134,10 +135,11 @@ export default function ProjectForm({ initialData = null, onSubmit, onClose, has
               />
             </div>
             <div className="form-group flex-1">
-              <label>Client</label>
+              <label htmlFor="client">Client</label>
               <input 
                 type="text" 
                 name="client" 
+                id="client"
                 value={formData.client} 
                 onChange={handleChange} 
                 placeholder="e.g. Luxury Brand" 
@@ -147,18 +149,19 @@ export default function ProjectForm({ initialData = null, onSubmit, onClose, has
 
           <div className="form-row">
             <div className="form-group flex-1">
-              <label>Category</label>
-              <select name="category" value={formData.category} onChange={handleChange}>
+              <label htmlFor="category">Category</label>
+              <select name="category" id="category" value={formData.category} onChange={handleChange}>
                 {CATEGORIES.map(cat => (
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>
             </div>
             <div className="form-group flex-1">
-              <label>Year</label>
+              <label htmlFor="year">Year</label>
               <input 
                 type="text" 
                 name="year" 
+                id="year"
                 required 
                 value={formData.year} 
                 onChange={handleChange} 
@@ -167,10 +170,11 @@ export default function ProjectForm({ initialData = null, onSubmit, onClose, has
           </div>
 
           <div className="form-group">
-            <label>Project URL (Link to content)</label>
+            <label htmlFor="projectUrl">Project URL (Link to content)</label>
             <input 
               type="url" 
               name="projectUrl" 
+              id="projectUrl"
               value={formData.projectUrl} 
               onChange={handleChange} 
               placeholder="https://youtube.com/..." 
@@ -178,7 +182,7 @@ export default function ProjectForm({ initialData = null, onSubmit, onClose, has
           </div>
 
           <div className="form-group">
-            <label>Main Description (Shown on Work page)</label>
+            <label htmlFor="description">Main Description (Shown on Work page)</label>
             <textarea 
               name="description" 
               required 
@@ -191,11 +195,12 @@ export default function ProjectForm({ initialData = null, onSubmit, onClose, has
 
           <div className="form-row" style={{ alignItems: 'flex-end' }}>
             <div className="form-group flex-1">
-              <label>Brand Color (Card Background)</label>
+              <label htmlFor="color">Brand Color (Card Background)</label>
               <div className="color-picker-wrapper">
                 <input 
                   type="color" 
                   name="color" 
+                  id="color"
                   value={formData.color} 
                   onChange={handleChange} 
                 />
@@ -245,8 +250,8 @@ export default function ProjectForm({ initialData = null, onSubmit, onClose, has
                 >
                   <div className="form-row">
                     <div className="form-group flex-1">
-                      <label>Home Page Slot (1-6)</label>
-                      <select name="showcaseSlot" value={formData.showcaseSlot} onChange={handleChange}>
+                      <label htmlFor="showcaseSlot">Home Page Slot (1-6)</label>
+                      <select name="showcaseSlot" id="showcaseSlot" value={formData.showcaseSlot} onChange={handleChange}>
                         {SHOWCASE_SLOTS.map(slot => (
                           <option key={slot.id} value={slot.id}>{slot.label}</option>
                         ))}
@@ -255,10 +260,11 @@ export default function ProjectForm({ initialData = null, onSubmit, onClose, has
                   </div>
                   
                   <div className="form-group">
-                    <label>Home Page Overlay Title/Label</label>
+                    <label htmlFor="showcaseLabel">Home Page Overlay Title/Label</label>
                     <input 
                       type="text" 
                       name="showcaseLabel" 
+                      id="showcaseLabel"
                       value={formData.showcaseLabel} 
                       onChange={handleChange} 
                       placeholder="e.g. Creator Empire — Reel" 

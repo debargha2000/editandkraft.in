@@ -11,6 +11,7 @@ export default function Work() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, margin: '-50px' });
   
@@ -23,6 +24,7 @@ export default function Work() {
         setProjects(data);
       } catch (error) {
         console.error("Failed to load projects:", error);
+        setError("Failed to load projects. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -52,6 +54,11 @@ export default function Work() {
 
       <section className="work-content" ref={ref}>
         <div className="container">
+          {error && (
+            <div className="error-message" style={{ color: 'red', textAlign: 'center', marginBottom: '2rem' }}>
+              {error}
+            </div>
+          )}
           {/* Filter Bar */}
           <motion.div
             className="work-filters"

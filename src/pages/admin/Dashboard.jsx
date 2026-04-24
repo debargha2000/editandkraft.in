@@ -6,7 +6,7 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { projectService } from '../../services/projectService';
 import { FirebaseErrorHandler } from '../../utils/firebaseError';
-import { pageTransition, fadeUp } from '../../utils/animations';
+import { fadeUp } from '../../utils/animations';
 import ProjectForm from '../../components/admin/ProjectForm';
 import MagneticButton from '../../components/ui/MagneticButton';
 import './Dashboard.css';
@@ -228,7 +228,7 @@ export default function Dashboard() {
                             className="project-thumb" 
                             style={{ backgroundColor: project.color || '#1a1a1a' }}
                           >
-                            {project.imageUrl && <img src={project.imageUrl} alt="" />}
+                            {project.imageUrl && <img src={project.imageUrl} alt={project.title} />}
                           </div>
                           <div className="project-names">
                             <span className="project-title-cell">{project.title}</span>

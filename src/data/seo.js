@@ -82,6 +82,7 @@ const ROUTE_SEO = {
     description: `${PORTFOLIO.sectionSubtitle} Explore ${PORTFOLIO.projects.length}+ projects across ${portfolioKeywords.join(", ")}.`,
     keywords: [...portfolioKeywords, "portfolio", "creative work", "case studies"].join(", "),
     ogType: "website",
+    ogImage: PORTFOLIO.projects[0]?.imageUrl || `${CANONICAL_BASE}/og-default.jpg`,
   },
   "/services": {
     title: `Services — ${SITE.name}`,

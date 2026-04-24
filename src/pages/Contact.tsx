@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { pageTransition, fadeUp, EASE_EXPO } from '../utils/animations';
+import { pageTransition, fadeUp } from '../utils/animations';
 import { SITE, CONTACT } from '../data/content';
 import { RevealLines } from '../components/ui/RevealText';
 import MagneticButton from '../components/ui/MagneticButton';

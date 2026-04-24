@@ -14,16 +14,9 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // Vendor chunks
-          if (id.includes('node_modules')) {
-            if (id.includes('firebase')) return 'vendor-firebase';
-            if (id.includes('framer-motion')) return 'vendor-motion';
-            if (id.includes('lenis')) return 'vendor-lenis';
-            // Consolidate react and other common dependencies to prevent circular chunks
-            return 'vendor-react';
-          }
           // Feature chunks
-          if (id.includes('pages/admin')) return 'admin';
+          if (id.includes('pages/admin') || id.includes('components/admin')) return 'admin-shared';
+          if (id.includes('components/layout/LiquidBackground')) return 'home-bg';
           if (id.includes('services')) return 'services';
         },
       },

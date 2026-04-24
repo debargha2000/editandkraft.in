@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { STATS } from '../../data/content';
 import { fadeUp } from '../../utils/animations';
