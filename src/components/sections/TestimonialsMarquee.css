@@ -9,6 +9,7 @@
 .testimonials__marquee-wrapper {
   overflow: hidden;
   width: 100%;
+  padding: 4rem 0; /* Added padding to prevent shadow clipping */
 }
 
 .testimonials__marquee {
