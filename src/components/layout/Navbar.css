@@ -67,8 +67,8 @@
 
 .navbar__logo-text {
   font-family: var(--font-marcellus);
-  font-weight: 700;
-  font-size: var(--text-lg);
+  font-weight: 600;
+  font-size: var(--text-xl);
   letter-spacing: -0.02em;
 }
 
