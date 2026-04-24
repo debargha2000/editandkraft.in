@@ -1,0 +1,15 @@
+/* Root entry — no framework CSS imports needed */
+/* All design tokens and styles are in styles/index.css */
+
+* {
+  cursor: none !important;
+}
+
+body {
+  background-color: #000000 !important;
+  cursor: none !important;
+}
+
+canvas[aria-hidden="true"] {
+  background-color: #000000 !important;
+}

@@ -1,0 +1,71 @@
+.skeleton-card {
+  height: auto;
+  border-radius: 4rem; /* Match real card radius */
+  background: rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+  position: relative;
+  padding: 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.skeleton-card--large {
+  grid-column: span 2;
+}
+
+.skeleton-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
+  animation: skeleton-shimmer 2s infinite;
+}
+
+.skeleton-card__image {
+  aspect-ratio: 16 / 10;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 2.5rem;
+}
+
+.skeleton-card--large .skeleton-card__image {
+  aspect-ratio: 21 / 9;
+}
+
+.skeleton-card__info {
+  padding: 1.5rem 0.5rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeleton-card__meta {
+  width: 40%;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+}
+
+.skeleton-card__title {
+  width: 80%;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+@keyframes skeleton-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@media (max-width: 768px) {
+  .skeleton-card--large {
+    grid-column: span 1;
+  }
+}

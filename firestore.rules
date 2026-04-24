@@ -1,0 +1,52 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Master Gate: Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Reuseable global helpers
+    function isSignedIn() { return request.auth != null; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function isVerifiedAdmin() { 
+      return isSignedIn() && 
+      (request.auth.token.email == 'debarghapakhira@gmail.com') &&
+      request.auth.token.email_verified == true;
+    }
+
+    // Project Validation Helper
+    function isValidProject(data) {
+      return data.title is string && data.title.size() <= 200 &&
+             data.description is string && data.description.size() <= 5000 &&
+             data.category in ['Social Media', 'Motion Graphics', 'YouTube', 'Short-Form'] &&
+             (data.get('client', '') is string) &&
+             (data.get('year', '') is string) &&
+             (data.get('projectUrl', '') is string) &&
+             (data.get('imageUrl', '') is string) &&
+             (data.get('color', '') is string) &&
+             (data.get('isFavorite', false) is bool) &&
+             (data.get('showcaseSlot', 0) is number) &&
+             (data.get('showcaseLabel', '') is string);
+    }
+
+    // 2. Portfolio Projects Collection
+    match /projects/{projectId} {
+      // Anyone can read projects (Public Portfolio)
+      // Hardened list: Ensure it doesn't leak or allow scraping without standard UI paths if needed
+      allow get, list: if true; 
+
+      // Only verified admins can write
+      allow create: if isVerifiedAdmin() && 
+                      isValidId(projectId) && 
+                      isValidProject(request.resource.data) &&
+                      request.resource.data.createdAt == request.time;
+      
+      allow update: if isVerifiedAdmin() && 
+                      isValidProject(request.resource.data) &&
+                      request.resource.data.updatedAt == request.time;
+                      
+      allow delete: if isVerifiedAdmin();
+    }
+  }
+}
