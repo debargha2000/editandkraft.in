@@ -5,18 +5,26 @@ const CONFIG = {
   blobCount: 6,
   blobRadiusMin: 0.35,
   blobRadiusMax: 0.60,
-  speedMin: 50, // Slightly slower for more "premium" feel and less CPU jitter
+  speedMin: 50,
   speedMax: 100,
-  blurAmount: 80, // Reduced slightly to balance performance and aesthetics
+  blurAmount: 80,
   saturationBoost: true,
 };
 
+// Mobile-specific optimizations
+const isMobile = () => typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches;
+const getMobileConfig = () => ({
+  speedMin: 35,
+  speedMax: 70,
+  blurAmount: 60,
+});
+
 // ── COLOURS ─────────────────────────────────────────────────
 const PALETTE = [
-  { r: 255, g: 0, b: 128 },   // hot pink
-  { r: 200, g: 50, b: 255 },   // magenta / purple
-  { r: 80, g: 60, b: 255 },   // blue‑violet
-  { r: 0, g: 180, b: 255 },   // cyan
+  { r: 255, g: 0, b: 128 },
+  { r: 200, g: 50, b: 255 },
+  { r: 80, g: 60, b: 255 },
+  { r: 0, g: 180, b: 255 },
 ];
 
 // ── HELPERS ─────────────────────────────────────────────────
@@ -24,20 +32,20 @@ function rand(min, max) { return Math.random() * (max - min) + min; }
 
 // ── BLOB CLASS ──────────────────────────────────────────────
 class Blob {
-  constructor(w, h, color) {
+  constructor(w, h, color, speedMin = CONFIG.speedMin, speedMax = CONFIG.speedMax) {
     this.x = rand(0, w);
     this.y = rand(0, h);
     this.vx = rand(-1, 1);
     this.vy = rand(-1, 1);
     const mag = Math.hypot(this.vx, this.vy) || 1;
-    const speed = rand(CONFIG.speedMin, CONFIG.speedMax);
+    const speed = rand(speedMin, speedMax);
     this.vx = (this.vx / mag) * speed;
     this.vy = (this.vy / mag) * speed;
     this.r = rand(CONFIG.blobRadiusMin, CONFIG.blobRadiusMax) * Math.min(w, h);
     this.color = color;
     this.baseR = this.r;
     this.rPhase = rand(0, Math.PI * 2);
-    this.rSpeed = rand(0.1, 0.3); // Slower pulsing
+    this.rSpeed = rand(0.1, 0.3);
     this.rAmp = this.baseR * 0.12;
   }
 
@@ -57,8 +65,6 @@ class Blob {
 
   draw(ctx) {
     const { r, g, b } = this.color;
-    // Caching gradient can be tricky because it depends on x,y. 
-    // But we can optimize the fillRect size.
     const grad = ctx.createRadialGradient(
       this.x, this.y, 0,
       this.x, this.y, this.r
@@ -74,95 +80,110 @@ class Blob {
 
 export default function LiquidBackground() {
   const canvasRef = useRef(null);
+  const cleanupRef = useRef(() => {});
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // PERFORMANCE: Check if user prefers reduced motion
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) {
-      canvas.style.display = 'none'; // Or draw a static frame
+      canvas.style.display = 'none';
       return;
     }
 
-    const ctx = canvas.getContext('2d', { alpha: false }); // Optimize for non-transparent canvas
-    let animationFrameId;
-    let W, H;
-    let blobs = [];
-    let isVisible = true;
+    const isMobileDevice = isMobile();
+    const mobileConfig = isMobileDevice ? getMobileConfig() : {};
 
-    const resize = () => {
-      // PERFORMANCE: Cap DPR at 1.2 for blurred backgrounds (huge fill-rate win)
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.2);
-      W = window.innerWidth;
-      H = window.innerHeight;
-      canvas.width = W * dpr;
-      canvas.height = H * dpr;
+    // Defer canvas initialization on mobile for better LCP
+    if (isMobileDevice && 'requestIdleCallback' in window) {
+      const id = requestIdleCallback(() => initCanvas(), { timeout: 2000 });
+      return () => cancelIdleCallback(id);
+    } else {
+      initCanvas();
+      return () => cleanupRef.current();
+    }
 
-      canvas.style.width = W + 'px';
-      canvas.style.height = H + 'px';
-      canvas.style.filter = `blur(${CONFIG.blurAmount}px) saturate(1.4) contrast(1.1)`;
-      canvas.style.transform = 'scale(1.1)';
-      canvas.style.transformOrigin = 'center center';
-      canvas.style.willChange = 'transform'; // Hardware acceleration hint
+    function initCanvas() {
+      const ctx = canvas.getContext('2d', { alpha: false });
+      let animationFrameId;
+      let W, H;
+      let blobs = [];
+      let isVisible = true;
 
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const currentConfig = { ...CONFIG, ...mobileConfig };
 
-      for (const b of blobs) {
-        b.baseR = rand(CONFIG.blobRadiusMin, CONFIG.blobRadiusMax) * Math.min(W, H);
-        b.rAmp = b.baseR * 0.12;
-      }
-    };
+      const resize = () => {
+        const dpr = Math.min(window.devicePixelRatio || 1, isMobileDevice ? 1 : 1.2);
+        W = window.innerWidth;
+        H = window.innerHeight;
+        canvas.width = W * dpr;
+        canvas.height = H * dpr;
 
-    const initBlobs = () => {
-      blobs = [];
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      for (let i = 0; i < CONFIG.blobCount; i++) {
-        blobs.push(new Blob(w, h, PALETTE[i % PALETTE.length]));
-      }
-    };
+        canvas.style.width = W + 'px';
+        canvas.style.height = H + 'px';
+        canvas.style.filter = `blur(${currentConfig.blurAmount}px) saturate(1.4) contrast(1.1)`;
+        canvas.style.transform = 'scale(1.1)';
+        canvas.style.transformOrigin = 'center center';
+        canvas.style.willChange = 'transform';
 
-    const handleVisibility = () => {
-      isVisible = document.visibilityState === 'visible';
-    };
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    initBlobs();
-    resize();
+        for (const b of blobs) {
+          b.baseR = rand(CONFIG.blobRadiusMin, CONFIG.blobRadiusMax) * Math.min(W, H);
+          b.rAmp = b.baseR * 0.12;
+        }
+      };
 
-    let last = performance.now();
-    const frame = (ts) => {
-      if (!isVisible) {
+      const initBlobs = () => {
+        blobs = [];
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        for (let i = 0; i < CONFIG.blobCount; i++) {
+          blobs.push(new Blob(w, h, PALETTE[i % PALETTE.length], currentConfig.speedMin || CONFIG.speedMin, currentConfig.speedMax || CONFIG.speedMax));
+        }
+      };
+
+      const handleVisibility = () => {
+        isVisible = document.visibilityState === 'visible';
+      };
+
+      initBlobs();
+      resize();
+
+      let last = performance.now();
+      const frame = (ts) => {
+        if (!isVisible) {
+          animationFrameId = requestAnimationFrame(frame);
+          return;
+        }
+
+        const dt = Math.min((ts - last) / 1000, 0.05);
+        last = ts;
+
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, W, H);
+
+        ctx.globalCompositeOperation = 'screen';
+        for (const blob of blobs) {
+          blob.update(dt, W, H);
+          blob.draw(ctx);
+        }
+
         animationFrameId = requestAnimationFrame(frame);
-        return;
-      }
-
-      const dt = Math.min((ts - last) / 1000, 0.05);
-      last = ts;
-
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.fillStyle = '#000000';
-      ctx.fillRect(0, 0, W, H);
-
-      ctx.globalCompositeOperation = 'screen';
-      for (const blob of blobs) {
-        blob.update(dt, W, H);
-        blob.draw(ctx);
-      }
+      };
 
       animationFrameId = requestAnimationFrame(frame);
-    };
+      window.addEventListener('resize', resize);
+      document.addEventListener('visibilitychange', handleVisibility);
 
-    animationFrameId = requestAnimationFrame(frame);
-    window.addEventListener('resize', resize);
-    document.addEventListener('visibilitychange', handleVisibility);
-
-    return () => {
-      window.removeEventListener('resize', resize);
-      document.removeEventListener('visibilitychange', handleVisibility);
-      cancelAnimationFrame(animationFrameId);
-    };
+      cleanupRef.current = () => {
+        window.removeEventListener('resize', resize);
+        document.removeEventListener('visibilitychange', handleVisibility);
+        cancelAnimationFrame(animationFrameId);
+      };
+    }
   }, []);
 
   return (
@@ -183,4 +204,3 @@ export default function LiquidBackground() {
     />
   );
 }
-

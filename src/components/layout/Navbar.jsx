@@ -13,15 +13,37 @@ export default function Navbar() {
   const lastScrollY = useRef(0);
 
   useEffect(() => {
+    let rafId = null;
+    let lastScrollTime = 0;
+    const scrollThrottle = 16; // ~60fps
+
     const handleScroll = () => {
-      const currentY = window.scrollY;
-      setIsScrolled(currentY > 50);
-      setIsHidden(currentY > lastScrollY.current && currentY > 200);
-      lastScrollY.current = currentY;
+      const now = performance.now();
+      
+      if (now - lastScrollTime < scrollThrottle) {
+        if (!rafId) {
+          rafId = requestAnimationFrame(() => {
+            const currentY = window.scrollY;
+            setIsScrolled(currentY > 50);
+            setIsHidden(currentY > lastScrollY.current && currentY > 200);
+            lastScrollY.current = currentY;
+            rafId = null;
+          });
+        }
+      } else {
+        const currentY = window.scrollY;
+        setIsScrolled(currentY > 50);
+        setIsHidden(currentY > lastScrollY.current && currentY > 200);
+        lastScrollY.current = currentY;
+        lastScrollTime = now;
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   useEffect(() => {
@@ -30,8 +52,12 @@ export default function Navbar() {
   }, [location]);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    if (menuOpen) {
+      document.body.classList.add('menu-open');
+    } else {
+      document.body.classList.remove('menu-open');
+    }
+    return () => { document.body.classList.remove('menu-open'); };
   }, [menuOpen]);
 
   return (

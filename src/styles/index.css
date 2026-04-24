@@ -32,6 +32,7 @@ body {
   color: var(--color-text);
   background-color: transparent;
   overflow-x: hidden;
+  scrollbar-gutter: stable;
 }
 
 a {
@@ -46,6 +47,7 @@ ul, ol {
 img, video {
   max-width: 100%;
   display: block;
+  contain: layout style paint;
 }
 
 /* ---- Button System (Monolithic & Unified) ---- */
@@ -209,6 +211,9 @@ input, textarea, select {
   --z-modal: 9999;
   --z-overlay: 9900;
   --z-nav: 1000;
+
+  /* Mobile Performance */
+  --reduce-motion: 0;
 }
 
 /* ---- Utility Classes ---- */
@@ -333,12 +338,59 @@ h1, h2, h3, h4, h5, h6, p, a, span, li, button, input, textarea {
     --text-6xl: clamp(2.2rem, 7vw, 2.8rem);
     --text-5xl: clamp(1.8rem, 6vw, 2.5rem);
   }
+  
+  /* Optimize glass morphism for mobile performance */
+  .glass {
+    backdrop-filter: blur(20px) saturate(1.2) brightness(1.05);
+    -webkit-backdrop-filter: blur(20px) saturate(1.2) brightness(1.05);
+  }
+  
+  /* Reduce animation on mobile for better performance */
+  .glass-shine::after {
+    transition: none;
+    display: none;
+  }
+  
+  .glass:hover.glass-shine::after {
+    left: -150%;
+  }
+  
+  /* Reduce button hover effects on mobile */
+  button:not(.btn-magic):hover {
+    transform: translateY(0);
+  }
+  
+  /* Optimize touch targets */
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
 }
 
 /* ---- Focus Styles ---- */
 *:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
+}
+
+/* ---- Reduced Motion Support ---- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .glass-shine::after {
+    display: none;
+  }
+  
+  button:not(.btn-magic):hover {
+    transform: none;
+  }
 }
 
 /* ---- Global Fallback ---- */

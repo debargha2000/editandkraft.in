@@ -11,20 +11,34 @@ export default defineConfig({
     },
   },
   build: {
-    // Optimize chunk splitting for faster page loads
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-motion': ['framer-motion'],
-          'vendor-firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage'],
+        manualChunks: (id) => {
+          // Vendor chunks
+          if (id.includes('node_modules')) {
+            if (id.includes('react')) return 'vendor-react';
+            if (id.includes('framer-motion')) return 'vendor-motion';
+            if (id.includes('firebase')) return 'vendor-firebase';
+            if (id.includes('lenis')) return 'vendor-lenis';
+            return 'vendor-common';
+          }
+          // Feature chunks
+          if (id.includes('pages/admin')) return 'admin';
+          if (id.includes('services')) return 'services';
         },
       },
     },
-    // Target modern browsers for smaller bundles
     target: 'es2020',
-    // Increase chunk warning limit slightly for vendor chunks
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
+    cssCodeSplit: true,
     chunkSizeWarningLimit: 600,
+    reportCompressedSize: true,
   },
   server: {
     port: 3000,
