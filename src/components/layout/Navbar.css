@@ -27,6 +27,10 @@
   opacity: 0.8;
 }
 
+.navbar--scrolled .navbar__logo-text {
+  font-size: var(--text-lg);
+}
+
 .navbar__inner {
   pointer-events: auto;
   display: flex;
@@ -70,6 +74,7 @@
   font-weight: 600;
   font-size: var(--text-xl);
   letter-spacing: -0.02em;
+  transition: font-size 0.5s var(--ease-out-expo);
 }
 
 
