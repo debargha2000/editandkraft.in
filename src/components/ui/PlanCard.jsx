@@ -3,6 +3,9 @@ import { motion } from 'framer-motion';
 import MagneticButton from './MagneticButton.jsx';
 import { scaleUp } from '../../utils/animations';
 
+/**
+ * @param {{ plan: any, index: number, isInView: boolean, [key: string]: any }} props
+ */
 export default function PlanCard({ plan, index, isInView }) {
   const [selectedOption, setSelectedOption] = useState(plan.purchaseOptions ? plan.purchaseOptions[0] : null);
   const cardAnim = scaleUp(index * 0.15, 0.7);

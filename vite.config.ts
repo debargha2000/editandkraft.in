@@ -16,11 +16,11 @@ export default defineConfig({
         manualChunks: (id) => {
           // Vendor chunks
           if (id.includes('node_modules')) {
-            if (id.includes('react')) return 'vendor-react';
-            if (id.includes('framer-motion')) return 'vendor-motion';
             if (id.includes('firebase')) return 'vendor-firebase';
+            if (id.includes('framer-motion')) return 'vendor-motion';
             if (id.includes('lenis')) return 'vendor-lenis';
-            return 'vendor-common';
+            // Consolidate react and other common dependencies to prevent circular chunks
+            return 'vendor-react';
           }
           // Feature chunks
           if (id.includes('pages/admin')) return 'admin';

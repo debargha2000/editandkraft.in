@@ -66,6 +66,9 @@ function replaceCanonical(html, newUrl) {
   );
 }
 
+/**
+ * @returns {import('vite').Plugin}
+ */
 export default function seoPrerender() {
   return {
     name: 'vite-plugin-seo-prerender',
