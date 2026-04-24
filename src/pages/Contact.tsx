@@ -21,6 +21,14 @@ export default function Contact() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Honeypot check
+    const honeypot = e.target.website_url.value;
+    if (honeypot) {
+      console.warn('Bot detected via honeypot.');
+      return;
+    }
+
     // In production, connect to a form backend
     setSubmitted(true);
   };
@@ -71,6 +79,11 @@ export default function Contact() {
                 </div>
               ) : (
                 <form className="contact-form" onSubmit={handleSubmit}>
+                  {/* Honeypot field to prevent bot spam */}
+                  <div style={{ display: 'none' }} aria-hidden="true">
+                    <input type="text" name="website_url" tabIndex={-1} autoComplete="off" />
+                  </div>
+
                   {CONTACT.formFields.map((field, i) => {
                     const fieldAnim = fadeUp(0.1 + i * 0.08, 0.5, 20);
                     return (

@@ -10,8 +10,8 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@vercel/analytics": "^2.0.1",
-    "@vercel/speed-insights": "^2.0.0",
+    "@vercel/analytics": "latest",
+    "@vercel/speed-insights": "latest",
     "@vitejs/plugin-react": "^5.0.4",
     "firebase": "^12.12.1",
     "framer-motion": "^12.38.0",

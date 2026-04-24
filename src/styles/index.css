@@ -340,3 +340,39 @@ h1, h2, h3, h4, h5, h6, p, a, span, li, button, input, textarea {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
+
+/* ---- Global Fallback ---- */
+.global-fallback {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000000;
+  z-index: 10000;
+}
+
+.global-fallback__shimmer {
+  width: 120px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  border-radius: 100px;
+}
+
+.global-fallback__shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, #FFFFFF, transparent);
+  animation: fallback-shimmer 1.5s var(--ease-out-expo) infinite;
+}
+
+@keyframes fallback-shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}

@@ -5,6 +5,7 @@ import { projectService } from '../../services/projectService';
 import { fadeUp } from '../../utils/animations';
 import SectionHeader from '../ui/SectionHeader';
 import MagneticButton from '../ui/MagneticButton';
+import PortfolioSkeleton from '../ui/PortfolioSkeleton';
 import './PortfolioPreview.css';
 
 export default function PortfolioPreview() {
@@ -45,9 +46,7 @@ export default function PortfolioPreview() {
         />
 
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '4rem 0', color: 'var(--color-text-muted)' }}>
-            Loading selected work...
-          </div>
+          <PortfolioSkeleton />
         ) : favoriteProjects.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '4rem 0', color: 'var(--color-text-muted)' }}>
             No showcase items added yet. Mark projects as "Favorite" in the CMS.
