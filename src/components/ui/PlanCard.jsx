@@ -24,7 +24,7 @@ export default function PlanCard({ plan, index, isInView }) {
       <div className="plan-header">
         <h2 className="plan-name">{plan.name}</h2>
         <p className="plan-description">{plan.description}</p>
-        
+
         {plan.purchaseOptions ? (
           <div className="plan-options">
             <div className="option-buttons">
@@ -50,20 +50,20 @@ export default function PlanCard({ plan, index, isInView }) {
           </div>
         )}
       </div>
-      
+
       <div className="plan-body">
         <ul className="plan-features">
           {plan.features.map((feature, idx) => (
             <li key={idx} className="plan-feature-item">
               <svg className="plan-check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               <span>{feature}</span>
             </li>
           ))}
         </ul>
       </div>
-      
+
       <div className="plan-footer">
         <MagneticButton>
           <a
