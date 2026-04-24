@@ -16,7 +16,7 @@ try {
   app = initializeApp(firebaseConfig);
   
   // Initialize Services with custom database ID from config
-  db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+  db = getFirestore(app);
   auth = getAuth(app);
   storage = getStorage(app);
   analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;

@@ -105,7 +105,12 @@ export default function LiquidBackground() {
     }
 
     function initCanvas() {
-      const ctx = canvas.getContext('2d', { alpha: false });
+      try {
+        const ctx = canvas.getContext('2d', { alpha: false });
+        if (!ctx) {
+          console.warn('Canvas 2D context not available');
+          return;
+        }
       let animationFrameId;
       let W, H;
       let blobs = [];
@@ -183,6 +188,11 @@ export default function LiquidBackground() {
         document.removeEventListener('visibilitychange', handleVisibility);
         cancelAnimationFrame(animationFrameId);
       };
+      } catch (error) {
+        console.error('LiquidBackground failed to initialize:', error);
+        // Hide canvas on error
+        canvas.style.display = 'none';
+      }
     }
   }, []);
 
