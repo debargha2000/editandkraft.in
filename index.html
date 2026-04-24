@@ -35,8 +35,14 @@
     <!-- Preload critical font (LCP optimization) -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap" as="style" />
 
-    <!-- Favicon -->
+    <!-- Favicon & PWA -->
     <link rel="icon" type="image/png" href="/FullLogo.png" />
+    <link rel="apple-touch-icon" href="/FullLogo.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- Legacy Mobile Support -->
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
 
     <!-- Theme color -->
     <meta name="theme-color" content="#000000" />

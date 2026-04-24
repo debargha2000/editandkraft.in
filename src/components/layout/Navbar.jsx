@@ -81,7 +81,7 @@ export default function Navbar() {
             exit={{ clipPath: 'circle(0% at calc(100% - 2rem) 2rem)' }}
             transition={{ duration: 0.8, ease: EASE_IN_OUT }}
           >
-            <div className="mobile-menu__inner">
+            <nav className="mobile-menu__inner">
               {NAV_LINKS.map((link, i) => (
                 <motion.div
                   key={link.path}
@@ -103,7 +103,7 @@ export default function Navbar() {
               >
                 <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
               </motion.div>
-            </div>
+            </nav>
           </motion.div>
         )}
       </AnimatePresence>

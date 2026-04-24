@@ -4,7 +4,7 @@
 // This file derives ALL SEO metadata from content.js.
 // When content changes, SEO updates automatically.
 // ============================================================
-import { SITE, SERVICES, PORTFOLIO, ABOUT, FOOTER } from "./content";
+import { SITE, SERVICES, PORTFOLIO, ABOUT, FOOTER, TESTIMONIALS, PLANS } from "./content";
 
 // ---------------------------------------------------------------------------
 // Dynamic keyword harvesting — pulled from live content, not hard-coded
@@ -197,6 +197,15 @@ export function getServiceSchemas() {
       "@type": "Country",
       name: SITE.location,
     },
+    offers: PLANS.filter(plan => plan.id !== 'custom').map(plan => ({
+      "@type": "Offer",
+      "name": plan.name,
+      "description": plan.description,
+      "price": plan.purchaseOptions[0].price.replace(/[^0-9]/g, ''),
+      "priceCurrency": "INR",
+      "availability": "https://schema.org/InStock",
+      "url": `${SITE.website}/services`
+    }))
   }));
 }
 
@@ -254,6 +263,31 @@ export function getCreativeWorkSchemas() {
 }
 
 /**
+ * Generate Review JSON-LD schemas from TESTIMONIALS in content.js.
+ * This allows Google to show star ratings or review snippets in search.
+ */
+export function getReviewSchemas() {
+  return TESTIMONIALS.map((testimonial) => ({
+    "@context": "https://schema.org",
+    "@type": "Review",
+    "itemReviewed": {
+      "@type": "Organization",
+      "name": SITE.name
+    },
+    "reviewBody": testimonial.quote,
+    "author": {
+      "@type": "Person",
+      "name": testimonial.author
+    },
+    "reviewRating": {
+      "@type": "Rating",
+      "ratingValue": "5",
+      "bestRating": "5"
+    }
+  }));
+}
+
+/**
  * Get all structured data schemas for a given route.
  * Returns an array of JSON-LD objects ready for injection.
  */
@@ -264,8 +298,14 @@ export function getAllSchemasForRoute(pathname = "/") {
     getBreadcrumbSchema(pathname),
   ];
 
-  // Add service schemas on home and services pages
-  if (pathname === "/" || pathname === "/services") {
+  // Add service and review schemas on home page
+  if (pathname === "/") {
+    schemas.push(...getServiceSchemas());
+    schemas.push(...getReviewSchemas());
+  }
+
+  // Add service schemas on services page
+  if (pathname === "/services") {
     schemas.push(...getServiceSchemas());
   }
 
