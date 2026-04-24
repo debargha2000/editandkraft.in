@@ -1,9 +1,11 @@
 .skeleton-card {
-  height: 400px;
-  border-radius: var(--radius-lg);
+  height: auto;
+  border-radius: 4rem; /* Match real card radius */
   background: rgba(255, 255, 255, 0.03);
   overflow: hidden;
   position: relative;
+  padding: 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .skeleton-card--large {
@@ -27,12 +29,17 @@
 }
 
 .skeleton-card__image {
-  height: 70%;
+  aspect-ratio: 16 / 10;
   background: rgba(255, 255, 255, 0.02);
+  border-radius: 2.5rem;
+}
+
+.skeleton-card--large .skeleton-card__image {
+  aspect-ratio: 21 / 9;
 }
 
 .skeleton-card__info {
-  padding: var(--space-md);
+  padding: 1.5rem 0.5rem 0.5rem;
   display: flex;
   flex-direction: column;
   gap: 12px;

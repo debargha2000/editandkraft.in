@@ -10,9 +10,6 @@
   margin-top: var(--space-xl);
 }
 
-.portfolio-preview__cta-btn {
-  /* Using global button styles */
-}
 
 /* Portfolio Card */
 .portfolio-card {
@@ -20,6 +17,7 @@
   padding: 2.5rem;
   border-radius: 4rem; /* iOS organic liquid shape */
   transition: all 0.6s var(--ease-out-expo);
+  will-change: transform;
 }
 
 .portfolio-card:hover {

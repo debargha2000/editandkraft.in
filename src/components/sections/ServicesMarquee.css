@@ -15,6 +15,7 @@
   animation: services-marquee 35s linear infinite;
   width: max-content;
   align-items: stretch; /* Ensures all cards in the row have same height */
+  will-change: transform;
 }
 
 @keyframes services-marquee {

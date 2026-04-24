@@ -31,8 +31,8 @@ export default function Hero() {
           <RevealLines
             text={HERO.headline}
             className="hero__headline-lines"
-            delay={0.4}
-            stagger={0.12}
+            delay={0.2}
+            stagger={0.1}
           />
         </h1>
 
