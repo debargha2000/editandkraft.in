@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
     <>
       <DynamicSEO />
       <StructuredData />
-      {pathname === '/' && <LiquidBackground />}
+      {!isAdminPath && <LiquidBackground />}
       <CustomCursor />
       {!isAdminPath && <Navbar />}
       {children}

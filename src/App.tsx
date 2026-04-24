@@ -31,6 +31,12 @@ function GlobalFallback() {
 }
 
 export default function App() {
+  const isProduction =
+    process.env.NODE_ENV === 'production' &&
+    typeof window !== 'undefined' &&
+    !window.location.hostname.includes('localhost') &&
+    !window.location.hostname.startsWith('127.');
+
   return (
     <ErrorBoundary>
       <HelmetProvider>
@@ -63,8 +69,8 @@ export default function App() {
           </RootLayout>
         </Router>
       </HelmetProvider>
-      <Analytics />
-      <SpeedInsights />
+      {isProduction && <Analytics />}
+      {isProduction && <SpeedInsights />}
     </ErrorBoundary>
   );
 }

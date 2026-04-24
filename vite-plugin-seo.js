@@ -9,61 +9,51 @@
 
 import fs from 'fs';
 import path from 'path';
+import { getSEOForRoute } from './src/data/seo.js';
 
-// Route SEO data — mirrors src/data/seo.js but statically for build time
-const SITE_NAME = 'Edit & Kraft';
-const SITE_URL = 'https://editandkraft.in';
-const SITE_DESCRIPTION = 'Premium digital marketing & creative agency specializing in scroll-stopping visual experiences that transform brands across India.';
-
-const ROUTE_SEO = {
-  '/work': {
-    title: `Our Work — ${SITE_NAME}`,
-    description: `A curated collection of our finest craft. Explore projects across social media, motion graphics, YouTube, and short-form content.`,
-    ogType: 'website',
-  },
-  '/services': {
-    title: `Services — ${SITE_NAME}`,
-    description: `A full spectrum of premium creative services — Content Creation, SEO Optimization, Advertising, Influencer Marketing, Analytics & Reporting.`,
-    ogType: 'website',
-  },
-  '/about': {
-    title: `About Us — ${SITE_NAME}`,
-    description: `What started as one artist's passion for visual storytelling has grown into a trusted creative force behind some of India's most recognized brands.`,
-    ogType: 'profile',
-  },
-  '/contact': {
-    title: `Contact Us — ${SITE_NAME}`,
-    description: `Get in touch with ${SITE_NAME}. ${SITE_DESCRIPTION}`,
-    ogType: 'website',
-  },
-};
+const ROUTES = ['/', '/work', '/services', '/about', '/contact'];
 
 /**
  * Replace meta tag content in an HTML string.
  */
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function insertBeforeHeadClose(html, tag) {
+  return html.replace(/<\/head>/i, `  ${tag}\n</head>`);
+}
+
 function replaceMetaTag(html, attribute, name, newContent) {
-  const regex = new RegExp(
-    `<meta\\s+${attribute}="${name}"\\s+content="[^"]*"\\s*/?>`,
-    'i'
-  );
-  return html.replace(regex, `<meta ${attribute}="${name}" content="${newContent}" />`);
+  const regex = new RegExp(`<meta[^>]*${attribute}="${escapeRegExp(name)}"[^>]*>`, 'i');
+  const tag = `<meta ${attribute}="${name}" content="${newContent}" />`;
+  if (regex.test(html)) {
+    return html.replace(regex, tag);
+  }
+  return insertBeforeHeadClose(html, tag);
 }
 
 /**
  * Replace the <title> tag content.
  */
 function replaceTitle(html, newTitle) {
-  return html.replace(/<title>[^<]*<\/title>/, `<title>${newTitle}</title>`);
+  const titleTag = /<title>[^<]*<\/title>/i;
+  if (titleTag.test(html)) {
+    return html.replace(titleTag, `<title>${newTitle}</title>`);
+  }
+  return insertBeforeHeadClose(html, `<title>${newTitle}</title>`);
 }
 
 /**
- * Replace the canonical link.
+ * Replace or insert the canonical link.
  */
-function replaceCanonical(html, newUrl) {
-  return html.replace(
-    /<link\s+rel="canonical"\s+href="[^"]*"\s*\/?>/,
-    `<link rel="canonical" href="${newUrl}" />`
-  );
+function replaceLinkTag(html, rel, href) {
+  const regex = new RegExp(`<link[^>]*rel="${escapeRegExp(rel)}"[^>]*>`, 'i');
+  const tag = `<link rel="${rel}" href="${href}" />`;
+  if (regex.test(html)) {
+    return html.replace(regex, tag);
+  }
+  return insertBeforeHeadClose(html, tag);
 }
 
 /**
@@ -86,36 +76,40 @@ export default function seoPrerender() {
 
       const baseHtml = fs.readFileSync(indexPath, 'utf-8');
 
-      for (const [route, seo] of Object.entries(ROUTE_SEO)) {
+      for (const route of ROUTES) {
         let html = baseHtml;
-        const fullUrl = `${SITE_URL}${route}`;
+        const seo = getSEOForRoute(route);
 
-        // Replace title
         html = replaceTitle(html, seo.title);
-
-        // Replace meta tags
         html = replaceMetaTag(html, 'name', 'description', seo.description);
-        html = replaceCanonical(html, fullUrl);
+        html = replaceMetaTag(html, 'name', 'keywords', seo.keywords || '');
+        html = replaceMetaTag(html, 'name', 'author', seo.author);
+        html = replaceMetaTag(html, 'name', 'robots', 'index, follow');
+        html = replaceLinkTag(html, 'canonical', seo.canonicalUrl);
 
-        // Open Graph
-        html = replaceMetaTag(html, 'property', 'og:title', seo.title);
-        html = replaceMetaTag(html, 'property', 'og:description', seo.description);
-        html = replaceMetaTag(html, 'property', 'og:url', fullUrl);
         html = replaceMetaTag(html, 'property', 'og:type', seo.ogType);
+        html = replaceMetaTag(html, 'property', 'og:title', seo.ogTitle);
+        html = replaceMetaTag(html, 'property', 'og:description', seo.ogDescription);
+        html = replaceMetaTag(html, 'property', 'og:url', seo.ogUrl);
+        html = replaceMetaTag(html, 'property', 'og:site_name', seo.ogSiteName);
+        html = replaceMetaTag(html, 'property', 'og:image', seo.ogImage);
+        html = replaceMetaTag(html, 'property', 'og:image:width', '1200');
+        html = replaceMetaTag(html, 'property', 'og:image:height', '630');
 
-        // Twitter
-        html = replaceMetaTag(html, 'name', 'twitter:title', seo.title);
-        html = replaceMetaTag(html, 'name', 'twitter:description', seo.description);
+        html = replaceMetaTag(html, 'name', 'twitter:card', seo.twitterCard);
+        html = replaceMetaTag(html, 'name', 'twitter:title', seo.twitterTitle);
+        html = replaceMetaTag(html, 'name', 'twitter:description', seo.twitterDescription);
+        html = replaceMetaTag(html, 'name', 'twitter:image', seo.twitterImage);
 
-        // Write to route-specific directory
-        const routeDir = path.join(distDir, route.slice(1)); // remove leading /
+        const routeDir = route === '/' ? distDir : path.join(distDir, route.slice(1));
         fs.mkdirSync(routeDir, { recursive: true });
         fs.writeFileSync(path.join(routeDir, 'index.html'), html, 'utf-8');
 
-        console.log(`[SEO Prerender] Generated ${route}/index.html`);
+        const routeLabel = route === '/' ? '/' : route;
+        console.log(`[SEO Prerender] Generated ${routeLabel}index.html`);
       }
 
-      console.log(`[SEO Prerender] ✓ ${Object.keys(ROUTE_SEO).length} route pages generated.`);
+      console.log(`[SEO Prerender] ✓ ${ROUTES.length} route pages generated.`);
     },
   };
 }
