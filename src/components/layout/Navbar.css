@@ -139,6 +139,11 @@
   align-items: stretch;
   z-index: calc(var(--z-nav) + 10);
   position: relative;
+  background: transparent;
+  border: none;
+  padding: 0;
+  outline: none;
+  cursor: pointer;
 }
 
 .navbar__burger-line {
