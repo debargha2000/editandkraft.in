@@ -4,6 +4,8 @@ import { lazy, Suspense } from 'react';
 import ErrorBoundary from './components/ui/ErrorBoundary';
 import RootLayout from './components/layout/RootLayout';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 // Pages — eagerly loaded (public-facing, SEO-critical)
 import Home from './pages/Home';
@@ -75,6 +77,8 @@ export default function App() {
           </RootLayout>
         </Router>
       </HelmetProvider>
+      <Analytics />
+      <SpeedInsights />
     </ErrorBoundary>
   );
 }
