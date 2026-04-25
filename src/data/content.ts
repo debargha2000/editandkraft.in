@@ -1,11 +1,19 @@
 // ============================================================
 // EDIT & KRAFT — CONTENT DATA FILE
 // ============================================================
-// This is the SINGLE SOURCE OF TRUTH for all website content.
-// To update any text, service, project, or info on the website,
-// simply edit the values below. No code knowledge required.
-// ============================================================
-export const SITE = {
+
+export interface SiteConfig {
+  name: string;
+  tagline: string;
+  description: string;
+  email: string;
+  phone: string;
+  website: string;
+  location: string;
+  copyright: string;
+}
+
+export const SITE: SiteConfig = {
   name: "Edit & Kraft",
   tagline: "Elevate Your Brand With Timeless Marketing Solutions",
   description:
@@ -17,7 +25,12 @@ export const SITE = {
   copyright: `© ${new Date().getFullYear()} Edit & Kraft. All rights reserved.`,
 };
 
-export const NAV_LINKS = [
+export interface NavLink {
+  label: string;
+  path: string;
+}
+
+export const NAV_LINKS: NavLink[] = [
   { label: "Home", path: "/" },
   { label: "Work", path: "/work" },
   { label: "Services", path: "/services" },
@@ -25,7 +38,14 @@ export const NAV_LINKS = [
   { label: "Contact", path: "/contact" },
 ];
 
-export const HERO = {
+export interface HeroConfig {
+  headline: string[];
+  subtext: string;
+  cta: { label: string; path: string };
+  scrollIndicator: string;
+}
+
+export const HERO: HeroConfig = {
   headline: ["Elevate Your Brand", "With Timeless Marketing", "Solutions"],
   subtext:
     "We craft scroll-stopping visual experiences — from social media campaigns to cinematic motion graphics — that transform how India's leading brands connect with their audience.",
@@ -33,7 +53,20 @@ export const HERO = {
   scrollIndicator: "Scroll to explore",
 };
 
-export const SERVICES = {
+export interface ServiceItem {
+  id: string;
+  title: string;
+  shortTitle?: string;
+  description: string;
+}
+
+export interface ServicesConfig {
+  sectionTitle: string;
+  sectionSubtitle: string;
+  items: ServiceItem[];
+}
+
+export const SERVICES: ServicesConfig = {
   sectionTitle: "What We Craft",
   sectionSubtitle:
     "A full spectrum of premium creative services designed to make your brand unforgettable.",
@@ -71,7 +104,40 @@ export const SERVICES = {
   ],
 };
 
-export const PLANS = [
+export interface PurchaseOption {
+  type: "one-time" | "subscription";
+  price: string;
+  period: string;
+  ctaText: string;
+  ctaLink: string;
+  isExternal: boolean;
+  billingCycleMonths?: number;
+  paidMonths?: number;
+}
+
+export interface Plan {
+  id: string;
+  name: string;
+  description: string;
+  features: string[];
+  popular: boolean;
+  purchaseOptions: PurchaseOption[];
+}
+
+export interface CustomPlan {
+  id: string;
+  name: string;
+  price: string;
+  period: string;
+  description: string;
+  features: string[];
+  ctaText: string;
+  ctaLink: string;
+  isExternal: boolean;
+  popular: boolean;
+}
+
+export const PLANS: (Plan | CustomPlan)[] = [
   {
     id: "gold",
     name: "Gold Service Plan",
@@ -159,7 +225,26 @@ export const PLANS = [
   }
 ];
 
-export const PORTFOLIO = {
+export interface Project {
+  id: number | string;
+  title: string;
+  category: string;
+  description: string;
+  year: string;
+  client: string;
+  color: string;
+  imageUrl?: string;
+  projectUrl?: string;
+}
+
+export interface PortfolioConfig {
+  sectionTitle: string;
+  sectionSubtitle: string;
+  categories: string[];
+  projects: Project[];
+}
+
+export const PORTFOLIO: PortfolioConfig = {
   sectionTitle: "Selected Work",
   sectionSubtitle: "A curated collection of our finest craft.",
   categories: [
@@ -233,14 +318,32 @@ export const PORTFOLIO = {
   ],
 };
 
-export const STATS = [
+export interface Stat {
+  value: number;
+  suffix: string;
+  label: string;
+}
+
+export const STATS: Stat[] = [
   { value: 10, suffix: "+", label: "Years of Experience" },
   { value: 200, suffix: "+", label: "Projects Delivered" },
   { value: 30, suffix: "+", label: "Brands Transformed" },
   { value: 15, suffix: "M+", label: "Views Generated" },
 ];
 
-export const PROCESS = {
+export interface ProcessStep {
+  number: string;
+  title: string;
+  description: string;
+}
+
+export interface ProcessConfig {
+  sectionTitle: string;
+  sectionSubtitle: string;
+  steps: ProcessStep[];
+}
+
+export const PROCESS: ProcessConfig = {
   sectionTitle: "Our Process",
   sectionSubtitle:
     "Every project follows a refined workflow built on a decade of creative expertise.",
@@ -278,7 +381,14 @@ export const PROCESS = {
   ],
 };
 
-export const TESTIMONIALS = [
+export interface Testimonial {
+  quote: string;
+  author: string;
+  role: string;
+  project: string;
+}
+
+export const TESTIMONIALS: Testimonial[] = [
   {
     quote:
       "Edit & Kraft didn't just design our campaign — they reimagined our entire brand presence. The results speak for themselves.",
@@ -316,7 +426,15 @@ export const TESTIMONIALS = [
   },
 ];
 
-export const ABOUT = {
+export interface AboutConfig {
+  headline: string;
+  intro: string;
+  story: string[];
+  philosophy: { title: string; text: string };
+  milestones: { year: string; event: string }[];
+}
+
+export const ABOUT: AboutConfig = {
   headline: "Crafting Visual Excellence Since 2016",
   intro:
     "What started as one artist's passion for visual storytelling has grown into a trusted creative force behind some of India's most recognized brands.",
@@ -346,7 +464,21 @@ export const ABOUT = {
   ],
 };
 
-export const CONTACT = {
+export interface FormField {
+  name: string;
+  label: string;
+  type: string;
+  required: boolean;
+  options?: string[];
+}
+
+export interface ContactConfig {
+  headline: string;
+  subtext: string;
+  formFields: FormField[];
+}
+
+export const CONTACT: ContactConfig = {
   headline: "Let's Create Something Extraordinary",
   subtext:
     "Have a project in mind? We'd love to hear about it. Drop us a line and let's start crafting.",
@@ -391,7 +523,18 @@ export const CONTACT = {
   ],
 };
 
-export const FOOTER = {
+export interface SocialLink {
+  label: string;
+  url: string;
+}
+
+export interface FooterConfig {
+  cta: string;
+  ctaButton: { label: string; path: string };
+  socialLinks: SocialLink[];
+}
+
+export const FOOTER: FooterConfig = {
   cta: "Ready to Elevate Your Brand?",
   ctaButton: { label: "Start a Project", path: "/contact" },
   socialLinks: [

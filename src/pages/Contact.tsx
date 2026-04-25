@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, ChangeEvent, FormEvent } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { pageTransition, fadeUp } from '../utils/animations';
 import { SITE, CONTACT } from '../data/content';
@@ -7,23 +7,26 @@ import MagneticButton from '../components/ui/MagneticButton';
 import './Contact.css';
 
 export default function Contact() {
-  const formRef = useRef(null);
-  const infoRef = useRef(null);
+  const formRef = useRef<HTMLDivElement>(null);
+  const infoRef = useRef<HTMLDivElement>(null);
   const formInView = useInView(formRef, { once: false, margin: '-50px' });
   const infoInView = useInView(infoRef, { once: false, margin: '-50px' });
   
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     // Honeypot check
-    const honeypot = e.target.website_url.value;
+    const target = e.target as typeof e.target & {
+      website_url: { value: string };
+    };
+    const honeypot = target.website_url.value;
     if (honeypot) {
       console.warn('Bot detected via honeypot.');
       return;
@@ -105,7 +108,7 @@ export default function Contact() {
                             className="contact-field__input contact-field__textarea"
                             required={field.required}
                             onChange={handleChange}
-                            rows="5"
+                            rows={5}
                           />
                         ) : field.type === 'select' ? (
                           <select
@@ -117,7 +120,7 @@ export default function Contact() {
                             defaultValue=""
                           >
                             <option value="" disabled>Select an option</option>
-                            {field.options.map((opt) => (
+                            {field.options?.map((opt) => (
                               <option key={opt} value={opt}>{opt}</option>
                             ))}
                           </select>

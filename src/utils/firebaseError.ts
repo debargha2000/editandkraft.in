@@ -1,9 +1,16 @@
+/// <reference types="vite/client" />
+
 /**
  * Firebase Error Handler
  * Provides consistent error handling and logging across the application
  */
 export class FirebaseErrorHandler {
-  static getErrorMessage(error) {
+  static handle(error: any, context = '') {
+    this.logError(error, context);
+    return this.getErrorMessage(error);
+  }
+
+  static getErrorMessage(error: any): string {
     if (!error) return 'An unexpected error occurred';
     // Firebase Auth Errors
     if (error.code) {
@@ -73,7 +80,8 @@ export class FirebaseErrorHandler {
     if (error instanceof SyntaxError) return 'Invalid data format.';
     return error.message || 'An unexpected error occurred';
   }
-  static logError(error, context = '') {
+
+  static logError(error: any, context = '') {
     console.error(`[Firebase Error ${context}]:`, {
       code: error.code,
       message: error.message,
@@ -86,12 +94,14 @@ export class FirebaseErrorHandler {
       this.reportToAnalytics(error, context);
     }
   }
+
   // eslint-disable-next-line no-unused-vars
-  static reportToAnalytics(error, context) {
+  static reportToAnalytics(_error: any, _context: string) {
     // Placeholder for analytics reporting
     // Add your error tracking service here
   }
-  static isRetryable(error) {
+
+  static isRetryable(error: any) {
     const retryableCodes = [
       'network-request-failed',
       'deadline-exceeded',
@@ -101,8 +111,9 @@ export class FirebaseErrorHandler {
     ];
     return retryableCodes.includes(error.code);
   }
-  static getHTTPStatusCode(error) {
-    const codeMap = {
+
+  static getHTTPStatusCode(error: any) {
+    const codeMap: Record<string, number> = {
       'permission-denied': 403,
       'unauthenticated': 401,
       'not-found': 404,
@@ -114,15 +125,16 @@ export class FirebaseErrorHandler {
     return codeMap[error.code] || 500;
   }
 }
+
 /**
  * Retry utility with exponential backoff
  */
-export async function retryWithExponentialBackoff(fn, maxRetries = 3) {
-  let lastError;
+export async function retryWithExponentialBackoff<T>(fn: () => Promise<T>, maxRetries = 3): Promise<T> {
+  let lastError: any;
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
       return await fn();
-    } catch (error) {
+    } catch (error: any) {
       lastError = error;
       if (!FirebaseErrorHandler.isRetryable(error)) {
         throw error;

@@ -4,8 +4,7 @@
 
 .stats__divider-top,
 .stats__divider-bottom {
-  height: 1px;
-  background: var(--color-border);
+  display: none;
 }
 
 .stats__grid {

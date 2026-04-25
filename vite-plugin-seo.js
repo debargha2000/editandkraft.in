@@ -11,7 +11,7 @@ import fs from 'fs';
 import path from 'path';
 import { getSEOForRoute } from './src/data/seo.js';
 
-const ROUTES = ['/', '/work', '/services', '/about', '/contact'];
+const ROUTES = ['/', '/work', '/services', '/about', '/contact', '/admin/login'];
 
 /**
  * Replace meta tag content in an HTML string.
@@ -76,6 +76,7 @@ export default function seoPrerender() {
 
       const baseHtml = fs.readFileSync(indexPath, 'utf-8');
 
+      // Generate Route Pages
       for (const route of ROUTES) {
         let html = baseHtml;
         const seo = getSEOForRoute(route);
@@ -84,7 +85,9 @@ export default function seoPrerender() {
         html = replaceMetaTag(html, 'name', 'description', seo.description);
         html = replaceMetaTag(html, 'name', 'keywords', seo.keywords || '');
         html = replaceMetaTag(html, 'name', 'author', seo.author);
-        html = replaceMetaTag(html, 'name', 'robots', 'index, follow');
+        html = replaceMetaTag(html, 'name', 'robots', seo.robots || 'index, follow');
+        html = replaceMetaTag(html, 'name', 'theme-color', seo.themeColor || '#000000');
+        html = replaceMetaTag(html, 'name', 'last-modified', seo.lastModified);
         html = replaceLinkTag(html, 'canonical', seo.canonicalUrl);
 
         html = replaceMetaTag(html, 'property', 'og:type', seo.ogType);
@@ -108,6 +111,29 @@ export default function seoPrerender() {
         const routeLabel = route === '/' ? '/' : route;
         console.log(`[SEO Prerender] Generated ${routeLabel}index.html`);
       }
+
+      // Generate sitemap.xml
+      const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  ${ROUTES.map(route => `
+  <url>
+    <loc>https://editandkraft.in${route === '/' ? '' : route}</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>${route === '/' ? 'weekly' : 'monthly'}</changefreq>
+    <priority>${route === '/' ? '1.0' : '0.8'}</priority>
+  </url>`).join('')}
+</urlset>`;
+      fs.writeFileSync(path.join(distDir, 'sitemap.xml'), sitemap, 'utf-8');
+      console.log('[SEO Prerender] Generated sitemap.xml');
+
+      // Generate robots.txt
+      const robots = `User-agent: *
+Allow: /
+Disallow: /admin/
+
+Sitemap: https://editandkraft.in/sitemap.xml`;
+      fs.writeFileSync(path.join(distDir, 'robots.txt'), robots, 'utf-8');
+      console.log('[SEO Prerender] Generated robots.txt');
 
       console.log(`[SEO Prerender] ✓ ${ROUTES.length} route pages generated.`);
     },

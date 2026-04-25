@@ -5,14 +5,16 @@
 // from here instead of hardcoding easing / transition values.
 // ============================================================
 // ---- Shared easing curves (mirrors CSS vars) ----
-export const EASE_EXPO = [0.16, 1, 0.3, 1];
-export const EASE_IN_OUT = [0.65, 0, 0.35, 1];
+export const EASE_EXPO = [0.16, 1, 0.3, 1] as const;
+export const EASE_IN_OUT = [0.65, 0, 0.35, 1] as const;
+
+export type EasingTuple = [number, number, number, number];
 
 // ---- Transition helpers ----
 export const expoTransition = (duration = 1, delay = 0) => ({
   duration,
   delay,
-  ease: EASE_EXPO,
+  ease: EASE_EXPO as unknown as EasingTuple,
 });
 
 // Check if user prefers reduced motion
@@ -114,11 +116,11 @@ export const pageTransition = prefersReducedMotion ? {
   animate: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, ease: EASE_EXPO },
+    transition: { duration: 0.8, ease: EASE_EXPO as unknown as EasingTuple },
   },
   exit: {
     opacity: 0,
     y: -20,
-    transition: { duration: 0.5, ease: EASE_IN_OUT },
+    transition: { duration: 0.5, ease: EASE_IN_OUT as unknown as EasingTuple },
   },
 };

@@ -8,7 +8,7 @@ import MagneticButton from '../ui/MagneticButton';
 import './Hero.css';
 
 export default function Hero() {
-  const ref = useRef(null);
+  const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ['start start', 'end start'],

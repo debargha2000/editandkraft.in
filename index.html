@@ -24,25 +24,21 @@
     <meta name="twitter:description" content="Premium digital marketing & creative agency specializing in scroll-stopping visual experiences that transform brands across India." />
     <meta name="twitter:image" content="https://editandkraft.in/og-image.jpg" />
 
-    <!-- Font Preloads for Core Web Vitals -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Marcellus&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-
-    <!-- Performance: Preconnect to critical origins -->
+    <!-- Performance: Preconnect and DNS Prefetch -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://firestore.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
 
     <!-- Performance: Optimize Font Loading -->
-    <link rel="preload" as="font" href="https://fonts.gstatic.com/s/marcellus/v19/f0X10jozODd5PNLjTH8n_6DQkHY.woff2" type="font/woff2" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=Marcellus&display=optional" rel="stylesheet" />
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=Marcellus&display=swap" rel="stylesheet" />
 
     <!-- Favicon & PWA -->
     <link rel="icon" type="image/png" href="/FullLogo.png" />
     <link rel="apple-touch-icon" href="/FullLogo.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="preload" as="image" href="/FullLogo.png" fetchpriority="high" />
 
     <!-- Legacy Mobile Support -->
     <meta name="HandheldFriendly" content="True" />

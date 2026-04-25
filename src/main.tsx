@@ -1,19 +1,19 @@
-import {StrictMode} from 'react';
-import {createRoot} from 'react-dom/client';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import App from './App.tsx';
 import './index.css';
 
-// Global error handler for unhandled promise rejections or runtime errors
-window.onerror = (message, source, lineno, colno, error) => {
-  console.error('[Global Error]', { message, source, lineno, colno, error });
-};
-
-window.onunhandledrejection = (event) => {
-  console.error('[Unhandled Rejection]', event.reason);
-};
+// Signal that JS is ready for custom cursor accessibility
+document.documentElement.classList.add('js-ready');
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <HelmetProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </HelmetProvider>
   </StrictMode>,
 );

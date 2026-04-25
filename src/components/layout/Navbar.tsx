@@ -13,7 +13,7 @@ export default function Navbar() {
   const lastScrollY = useRef(0);
 
   useEffect(() => {
-    let rafId = null;
+    let rafId: number | null = null;
     let lastScrollTime = 0;
     const scrollThrottle = 16; // ~60fps
 
@@ -47,7 +47,6 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line
     setMenuOpen(false);
   }, [location]);
 
@@ -73,12 +72,13 @@ export default function Navbar() {
             <span className="navbar__logo-text" style={{ color: 'white' }}>{SITE.name}</span>
           </Link>
 
-          <div className="navbar__links">
+          <div className="navbar__links" role="navigation">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
                 className={`navbar__link ${location.pathname === link.path ? 'navbar__link--active' : ''}`}
+                aria-current={location.pathname === link.path ? 'page' : undefined}
               >
                 <span className="navbar__link-text">{link.label}</span>
               </Link>
@@ -97,7 +97,6 @@ export default function Navbar() {
         </div>
       </motion.nav>
 
-      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -107,7 +106,7 @@ export default function Navbar() {
             exit={{ clipPath: 'circle(0% at calc(100% - 2rem) 2rem)' }}
             transition={{ duration: 0.8, ease: EASE_IN_OUT }}
           >
-            <nav className="mobile-menu__inner">
+            <nav className="mobile-menu__inner" aria-label="Mobile navigation">
               {NAV_LINKS.map((link, i) => (
                 <motion.div
                   key={link.path}
@@ -116,7 +115,11 @@ export default function Navbar() {
                   exit={{ opacity: 0, y: 20 }}
                   transition={{ delay: 0.1 + i * 0.08, duration: 0.6, ease: EASE_EXPO }}
                 >
-                  <Link to={link.path} className="mobile-menu__link">
+                  <Link 
+                    to={link.path} 
+                    className="mobile-menu__link"
+                    aria-current={location.pathname === link.path ? 'page' : undefined}
+                  >
                     {link.label}
                   </Link>
                 </motion.div>
@@ -127,7 +130,7 @@ export default function Navbar() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
               >
-                <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+                <a href={`mailto:${SITE.email}`} aria-label={`Email us at ${SITE.email}`}>{SITE.email}</a>
               </motion.div>
             </nav>
           </motion.div>

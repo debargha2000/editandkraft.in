@@ -7,7 +7,7 @@ import MagneticButton from '../ui/MagneticButton';
 import './Footer.css';
 
 export default function Footer() {
-  const ref = useRef(null);
+  const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: false, margin: '-100px' });
 
   const headingAnim = fadeUp(0, 1, 60);
@@ -20,7 +20,7 @@ export default function Footer() {
         {/* CTA Section */}
         <div className="footer__cta">
           <motion.h2
-            className="footer__cta-text"
+            className="footer__cta-text font-display"
             initial={headingAnim.initial}
             animate={isInView ? headingAnim.animate : {}}
             transition={headingAnim.transition}
@@ -33,7 +33,7 @@ export default function Footer() {
             transition={btnAnim.transition}
           >
             <MagneticButton>
-              <Link to={FOOTER.ctaButton.path} className="footer__cta-btn">
+              <Link to={FOOTER.ctaButton.path} className="footer__cta-btn button button--primary" aria-label={`Start a project: ${FOOTER.ctaButton.label}`}>
                 {FOOTER.ctaButton.label}
               </Link>
             </MagneticButton>
@@ -52,18 +52,18 @@ export default function Footer() {
         {/* Bottom */}
         <div className="footer__bottom">
           <div className="footer__info">
-            <Link to="/" className="footer__logo">{SITE.name}</Link>
+            <Link to="/" className="footer__logo font-display" aria-label="Edit & Kraft Home">{SITE.name}</Link>
             <p className="footer__tagline">{SITE.tagline}</p>
           </div>
 
           <div className="footer__email">
-            <span className="footer__email-label">Get in touch</span>
-            <a href={`mailto:${SITE.email}`} className="footer__email-link">
+            <span className="footer__email-label text-uppercase">Get in touch</span>
+            <a href={`mailto:${SITE.email}`} className="footer__email-link" aria-label={`Send email to ${SITE.email}`}>
               {SITE.email}
             </a>
           </div>
 
-          <div className="footer__socials">
+          <div className="footer__socials" role="list">
             {FOOTER.socialLinks.map((social) => (
               <a
                 key={social.label}
@@ -71,6 +71,8 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer__social-link"
+                aria-label={`Follow us on ${social.label}`}
+                role="listitem"
               >
                 {social.label}
               </a>

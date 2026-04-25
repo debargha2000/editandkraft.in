@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-// ⚠️ THESE TWO IMPORTS MUST BE ADDED:
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, User } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { pageTransition, fadeUp } from '../../utils/animations';
 import MagneticButton from '../../components/ui/MagneticButton';
@@ -10,8 +9,7 @@ import './Login.css';
 
 import { ALLOWED_EMAILS } from '../../utils/authConfig';
 
-// ⚠️ Add these for Google Provider configuration:
-let googleAuthProvider = null; // Initialize outside component to avoid re-creation
+let googleAuthProvider: GoogleAuthProvider | null = null;
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -20,7 +18,6 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Check if auth is initialized in firebase.js
   useEffect(() => {
     const initializeGoogleProvider = async () => {
       if (!auth) {
@@ -34,16 +31,16 @@ export default function Login() {
     initializeGoogleProvider();
   }, []);
 
-  const checkAndRedirect = async (user) => {
-    if (!ALLOWED_EMAILS.includes(user.email)) {
-      await auth.signOut();
+  const checkAndRedirect = async (user: User) => {
+    if (user.email && !ALLOWED_EMAILS.includes(user.email)) {
+      await auth?.signOut();
       navigate('/');
       return false;
     }
     return true;
   };
 
-  const handleEmailLogin = async (e) => {
+  const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -59,7 +56,7 @@ export default function Login() {
       if (await checkAndRedirect(userCredential.user)) {
         navigate('/admin/dashboard');
       }
-    } catch (err) {
+    } catch (err: any) {
       setError('Invalid email or password. Please try again.');
       setLoading(false);
     }
@@ -76,7 +73,6 @@ export default function Login() {
     }
     
     try {
-      // Initialize Google provider if it hasn't been yet
       if (!googleAuthProvider) {
         googleAuthProvider = new GoogleAuthProvider();
       }
@@ -86,7 +82,7 @@ export default function Login() {
       if (await checkAndRedirect(userCredential.user)) {
         navigate('/admin/dashboard');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Google Sign-In Error:', err);
       
       if (err.code !== 'auth/popup-closed-by-user') {
@@ -116,7 +112,7 @@ export default function Login() {
           </div>
           
           {error && (
-            <div className="login-error">{error}</div>
+            <div className="login-error" role="alert">{error}</div>
           )}
 
           <button 
@@ -124,8 +120,9 @@ export default function Login() {
             className="button google-btn" 
             onClick={handleGoogleLogin}
             disabled={loading}
+            aria-label="Sign in with Google"
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
               <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
@@ -150,6 +147,7 @@ export default function Login() {
                 required
                 disabled={loading}
                 placeholder="hello@editandkraft.in"
+                autoComplete="email"
               />
             </div>
 
@@ -163,6 +161,7 @@ export default function Login() {
                 required
                 disabled={loading}
                 placeholder="••••••••"
+                autoComplete="current-password"
               />
             </div>
 

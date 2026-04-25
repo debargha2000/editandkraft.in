@@ -3,16 +3,17 @@ import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { useAnimations } from '../hooks/useAnimations';
 import { projectService } from '../services/projectService';
 import SectionHeader from '../components/ui/SectionHeader';
+import { Project } from '../data/content';
 import './Work.css';
 
 const CATEGORIES = ['All', 'Social Media', 'Motion Graphics', 'YouTube', 'Short-Form'];
 
 export default function Work() {
   const [activeCategory, setActiveCategory] = useState('All');
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const ref = useRef(null);
+  const [error, setError] = useState<string | null>(null);
+  const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: false, margin: '-50px' });
   
   const { pageTransition, fadeUp, scaleUp } = useAnimations();
@@ -21,7 +22,7 @@ export default function Work() {
     const fetchProjects = async () => {
       try {
         const data = await projectService.getProjects();
-        setProjects(data);
+        setProjects(data as Project[]);
       } catch (error) {
         console.error("Failed to load projects:", error);
         setError("Failed to load projects. Please try again later.");

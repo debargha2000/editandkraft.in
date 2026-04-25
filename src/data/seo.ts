@@ -70,7 +70,16 @@ const CANONICAL_BASE = SITE.website;
 // Per-route SEO configuration
 // Each route derives its description from actual content data
 // ---------------------------------------------------------------------------
-const ROUTE_SEO = {
+interface RouteSEOConfig {
+  title: string;
+  description: string;
+  keywords: string;
+  ogType: string;
+  ogImage?: string;
+  robots?: string;
+}
+
+const ROUTE_SEO: Record<string, RouteSEOConfig> = {
   "/": {
     title: `${SITE.name} — ${SITE.tagline}`,
     description: SITE.description,
@@ -86,7 +95,7 @@ const ROUTE_SEO = {
   },
   "/services": {
     title: `Services — ${SITE.name}`,
-    description: `${SERVICES.sectionSubtitle} Choose from ${SERVICES.items.map((s) => s.shortTitle || s.title).join(", ")}.`,
+    description: `${SERVICES.sectionSubtitle} Choose from ${SERVICES.items.map((s) => s.title).join(", ")}.`,
     keywords: [...serviceKeywords.slice(0, 10), "digital marketing services", "creative services"].join(", "),
     ogType: "website",
   },
@@ -102,6 +111,13 @@ const ROUTE_SEO = {
     keywords: ["contact Edit and Kraft", "hire creative agency", "digital marketing inquiry", "brand consultation"].join(", "),
     ogType: "website",
   },
+  "/admin/login": {
+    title: `Admin Login — ${SITE.name}`,
+    description: "Secure gateway for Edit & Kraft administrators to manage portfolio content and project updates.",
+    keywords: "admin, login, edit and kraft portal",
+    ogType: "website",
+    robots: "noindex, nofollow"
+  },
 };
 
 /**
@@ -112,8 +128,8 @@ const ROUTE_SEO = {
  * @param {object} [overrides] - Optional overrides for any SEO field
  * @returns {object} Complete SEO configuration
  */
-export function getSEOForRoute(pathname = "/", overrides = {}) {
-  const routeConfig = ROUTE_SEO[pathname] || ROUTE_SEO["/"];
+export function getSEOForRoute(pathname: string = "/", overrides: any = {}) {
+  const routeConfig = (ROUTE_SEO[pathname] || ROUTE_SEO["/"]) as RouteSEOConfig;
   return {
     title: routeConfig.title,
     description: routeConfig.description,
@@ -131,6 +147,8 @@ export function getSEOForRoute(pathname = "/", overrides = {}) {
     twitterImage: `${CANONICAL_BASE}/og-image.jpg`,
     author: SITE.name,
     lastModified: BUILD_DATE,
+    themeColor: "#000000",
+    robots: routeConfig.robots,
     ...overrides,
   };
 }
@@ -184,29 +202,34 @@ export function getWebSiteSchema() {
  * When services are added/removed in content.js, schema auto-adapts.
  */
 export function getServiceSchemas() {
+  if (!SERVICES?.items) return [];
   return SERVICES.items.map((service) => ({
     "@context": "https://schema.org",
     "@type": "Service",
-    name: service.title,
-    description: service.description,
+    name: service?.title || "Service",
+    description: service?.description || "",
     provider: {
       "@type": "Organization",
       name: SITE.name,
     },
-    serviceType: service.shortTitle || service.title,
+    serviceType: service?.shortTitle || service?.title || "Creative Service",
     areaServed: {
       "@type": "Country",
       name: SITE.location,
     },
-    offers: PLANS.filter(plan => plan.id !== 'custom').map(plan => ({
-      "@type": "Offer",
-      "name": plan.name,
-      "description": plan.description,
-      "price": plan.purchaseOptions[0].price.replace(/[^0-9]/g, ''),
-      "priceCurrency": "INR",
-      "availability": "https://schema.org/InStock",
-      "url": `${SITE.website}/services`
-    }))
+    offers: (PLANS || []).filter(plan => plan && plan.id !== 'custom').map(plan => {
+      // Basic type narrowing - custom plan doesn't have purchaseOptions in its type but we filtered it out
+      const p = plan as any; 
+      return {
+        "@type": "Offer",
+        "name": p.name,
+        "description": p.description,
+        "price": p.purchaseOptions ? p.purchaseOptions[0]?.price?.replace(/[^0-9]/g, '') : "0",
+        "priceCurrency": "INR",
+        "availability": "https://schema.org/InStock",
+        "url": `${SITE.website}/services`
+      };
+    })
   }));
 }
 
@@ -214,13 +237,13 @@ export function getServiceSchemas() {
  * Generate BreadcrumbList JSON-LD schema for a given route.
  * Adapts dynamically based on the current pathname.
  */
-export function getBreadcrumbSchema(pathname = "/") {
+export function getBreadcrumbSchema(pathname: string = "/") {
   const breadcrumbs = [
     { name: "Home", url: SITE.website },
   ];
 
   if (pathname !== "/") {
-    const routeConfig = ROUTE_SEO[pathname];
+    const routeConfig = ROUTE_SEO[pathname] as RouteSEOConfig;
     const pageName = routeConfig
       ? routeConfig.title.split(" — ")[0]
       : pathname.replace("/", "").charAt(0).toUpperCase() + pathname.slice(2);
@@ -248,18 +271,19 @@ export function getBreadcrumbSchema(pathname = "/") {
  * When portfolio items are added/removed in content.js, schema auto-adapts.
  */
 export function getCreativeWorkSchemas() {
-  return PORTFOLIO.projects.map((project) => ({
+  if (!PORTFOLIO?.projects) return [];
+  return PORTFOLIO.projects.map((project: any) => ({
     "@context": "https://schema.org",
     "@type": "CreativeWork",
-    name: project.title,
-    description: project.description,
+    name: project?.title || "Project",
+    description: project?.description || "",
     creator: {
       "@type": "Organization",
       name: SITE.name,
     },
-    dateCreated: project.year,
-    about: project.category,
-    client: project.client,
+    dateCreated: project?.year || "",
+    about: project?.category || "",
+    client: project?.client || "",
   }));
 }
 
@@ -268,17 +292,18 @@ export function getCreativeWorkSchemas() {
  * This allows Google to show star ratings or review snippets in search.
  */
 export function getReviewSchemas() {
-  return TESTIMONIALS.map((testimonial) => ({
+  if (!TESTIMONIALS) return [];
+  return TESTIMONIALS.map((testimonial: any) => ({
     "@context": "https://schema.org",
     "@type": "Review",
     "itemReviewed": {
       "@type": "Organization",
       "name": SITE.name
     },
-    "reviewBody": testimonial.quote,
+    "reviewBody": testimonial?.quote || "",
     "author": {
       "@type": "Person",
-      "name": testimonial.author
+      "name": testimonial?.author || "Satisfied Client"
     },
     "reviewRating": {
       "@type": "Rating",
@@ -292,8 +317,8 @@ export function getReviewSchemas() {
  * Get all structured data schemas for a given route.
  * Returns an array of JSON-LD objects ready for injection.
  */
-export function getAllSchemasForRoute(pathname = "/") {
-  const schemas = [
+export function getAllSchemasForRoute(pathname: string = "/") {
+  const schemas: any[] = [
     getOrganizationSchema(),
     getWebSiteSchema(),
     getBreadcrumbSchema(pathname),

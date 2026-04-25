@@ -203,7 +203,7 @@ export default function LiquidBackground() {
         position: 'fixed',
         top: 0,
         left: 0,
-        zIndex: -1,
+        zIndex: 0,
         pointerEvents: 'none',
         display: 'block',
         width: '100vw',

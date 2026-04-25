@@ -14,7 +14,15 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  cursor: none !important;
+}
+
+/* Hide default cursor only if on desktops (CustomCursor will handle display) */
+@media (pointer: fine) {
+  html.js-ready, 
+  html.js-ready body, 
+  html.js-ready * {
+    cursor: none;
+  }
 }
 
 html {
